@@ -113,3 +113,88 @@ footer {
     padding: 8px 14px;
   }
 }
+
+/* ========= KidsLab 首頁卡片樣式 ========= */
+.grid {
+  max-width: 880px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+a.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 22px;
+  border-radius: 20px;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background: linear-gradient(145deg, var(--b1), var(--b2));
+  box-shadow: var(--glow-soft);
+  transition: transform .18s ease, box-shadow .2s ease, filter .2s ease;
+  overflow: hidden;
+}
+
+a.card::after {
+  content: "";
+  position: absolute;
+  inset: auto -40% -60% -40%;
+  height: 120%;
+  background: radial-gradient(60% 60% at 50% 100%, rgba(255,255,255,.25), transparent 60%);
+  transform: translateY(10%);
+  transition: opacity .25s ease, transform .25s ease;
+  opacity: .2;
+  pointer-events: none;
+}
+
+a.card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--glow);
+  filter: saturate(1.05);
+}
+
+a.card:hover::after {
+  opacity: .35;
+  transform: translateY(0);
+}
+
+a.card:active { transform: translateY(-1px) scale(.99); }
+
+.emoji {
+  font-size: 42px;
+  margin-bottom: 10px;
+  transition: transform .18s ease;
+}
+
+a.card:hover .emoji {
+  transform: translateY(-2px) scale(1.06);
+}
+
+.ttl {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #2F3E46;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+}
+
+.sub {
+  display: block;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #3F5360;
+  opacity: .95;
+}
+
+footer {
+  margin-top: 48px;
+  font-size: 14px;
+  color: #2F3E46;
+}
+
