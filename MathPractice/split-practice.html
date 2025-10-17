@@ -143,9 +143,14 @@ const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const updateStats=()=>{stats.textContent=`完成題數：${correctCount}　｜　答錯次數：${wrongCount}`;};
 
 function newQuestion(){
-  feedback.textContent=''; drop.innerHTML=''; pool.innerHTML=''; knownRow.innerHTML='';
-  target=randInt(2,10); const a=randInt(1,target-1);
-  known=Math.random()<0.5?a:target-a; answer=target-known;
+  feedback.textContent='';
+  drop.innerHTML='';
+  pool.innerHTML='';
+  knownRow.innerHTML='';
+  target=randInt(2,10);
+  const a=randInt(1,target-1);
+  known=Math.random()<0.5?a:target-a;
+  answer=target-known;
   const leftBox=Math.random()<0.5;
   problem.textContent = leftBox ? `${target} → ☐ + ${known}` : `${target} → ${known} + ☐`;
   for(let i=0;i<known;i++) knownRow.appendChild(makeDot(false));
@@ -153,13 +158,29 @@ function newQuestion(){
   for(let i=0;i<poolCount;i++) pool.appendChild(makeDot(true));
 }
 
+/* ✅ 浮出提示框 */
+function showPopup(text, isCorrect) {
+  const popup = document.createElement("div");
+  popup.className = `result-popup ${isCorrect ? "correct" : "wrong"}`;
+  popup.textContent = text;
+  document.body.appendChild(popup);
+  setTimeout(() => popup.classList.add("show"), 10);
+  setTimeout(() => {
+    popup.classList.remove("show");
+    setTimeout(() => popup.remove(), 300);
+  }, 1000);
+}
+
+/* ===== 改良可拖曳支援滑鼠＋手機 ===== */
 function makeDot(draggable){
-  const d=document.createElement('div'); d.className='dot';
+  const d=document.createElement('div');
+  d.className='dot';
   if(!draggable) return d;
-  let startX=0,startY=0,ghost=null;
-  const onPointerDown=(e)=>{e.preventDefault();
+
+  let ghost=null;
+
+  function startDrag(x,y){
     const rect=d.getBoundingClientRect();
-    startX=e.clientX-rect.left;startY=e.clientY-rect.top;
     ghost=d.cloneNode(true);
     ghost.style.position='fixed';
     ghost.style.left=rect.left+'px';
@@ -167,24 +188,49 @@ function makeDot(draggable){
     ghost.style.pointerEvents='none';
     ghost.classList.add('dragging');
     document.body.appendChild(ghost);
-    document.addEventListener('pointermove',onMove);
-    document.addEventListener('pointerup',onUp,{once:true});
-  };
-  const onMove=(e)=>{
-    if(!ghost)return;
-    ghost.style.left=(e.clientX-startX)+'px';
-    ghost.style.top=(e.clientY-startY)+'px';
-  };
-  const onUp=(e)=>{
-    document.removeEventListener('pointermove',onMove);
-    if(!ghost)return;
+  }
+  function moveDrag(x,y){
+    if(!ghost) return;
+    ghost.style.left=(x-15)+'px';
+    ghost.style.top=(y-15)+'px';
+  }
+  function endDrag(x,y){
+    if(!ghost) return;
     const r=drop.getBoundingClientRect();
-    const x=e.clientX,y=e.clientY;
     const inDrop=(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom);
-    ghost.remove();ghost=null;
-    if(inDrop){drop.appendChild(simpleDot());}
-  };
-  d.addEventListener('pointerdown',onPointerDown);
+    ghost.remove();
+    ghost=null;
+    if(inDrop){ drop.appendChild(simpleDot()); }
+  }
+
+  // 滑鼠事件
+  d.addEventListener('pointerdown', e=>{
+    e.preventDefault();
+    startDrag(e.clientX,e.clientY);
+    const move=e2=>moveDrag(e2.clientX,e2.clientY);
+    const up=e2=>{
+      document.removeEventListener('pointermove',move);
+      document.removeEventListener('pointerup',up);
+      endDrag(e2.clientX,e2.clientY);
+    };
+    document.addEventListener('pointermove',move);
+    document.addEventListener('pointerup',up);
+  });
+
+  // 觸控事件
+  d.addEventListener('touchstart', e=>{
+    const t=e.touches[0];
+    startDrag(t.clientX,t.clientY);
+  });
+  d.addEventListener('touchmove', e=>{
+    const t=e.touches[0];
+    moveDrag(t.clientX,t.clientY);
+  });
+  d.addEventListener('touchend', e=>{
+    const t=e.changedTouches[0];
+    endDrag(t.clientX,t.clientY);
+  });
+
   return d;
 }
 
@@ -193,27 +239,69 @@ function simpleDot(){
   d.className='dot';
   d.style.cursor='pointer';
   d.title='點一下移回下方圓點區';
-  d.addEventListener('click',()=>{pool.appendChild(makeDot(true));d.remove();});
+  d.addEventListener('click',()=>{
+    pool.appendChild(makeDot(true));
+    d.remove();
+  });
   return d;
 }
 
 function checkAnswer(){
   const count=drop.children.length;
   if(count===answer){
+    showPopup("✅ 答對了！", true);
     feedback.style.color='var(--ok)';
     feedback.textContent='✅ 答對了！';
-    correctCount++; updateStats();
+    correctCount++;
+    updateStats();
     setTimeout(newQuestion,1200);
   }else{
+    showPopup("❌ 再試一次", false);
     feedback.style.color='var(--no)';
     feedback.textContent='❌ 再試一次';
-    wrongCount++; updateStats();
+    wrongCount++;
+    updateStats();
   }
 }
 
 nextBtn.addEventListener('click',newQuestion);
 checkBtn.addEventListener('click',checkAnswer);
-updateStats(); newQuestion();
+updateStats();
+newQuestion();
 </script>
+
+<style>
+/* ✅ 浮出提示框樣式 */
+.result-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  padding: 20px 36px;
+  border-radius: 12px;
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  opacity: 0;
+  z-index: 999;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.result-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.result-popup.correct {
+  background: rgba(76, 175, 80, 0.92);
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+}
+.result-popup.wrong {
+  background: rgba(244, 67, 54, 0.9);
+  box-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
+}
+</style>
+
+
 </body>
 </html>
