@@ -180,140 +180,160 @@ body { padding-bottom: 90px; }
   <script src="zhuyin-all.js"></script>
 
   <!-- ✅ 加回主要 JS 邏輯 -->
-  <script>
-    let current=-1,selected=[],isChallenge=false;
-    const ROUND_TOTAL=10; let roundCount=0,roundCorrect=0;
+<script>
+let current=-1,selected=[],isChallenge=false;
+const ROUND_TOTAL=10; 
+let roundCount=0,roundCorrect=0;
 
-    function getDistractors(correct){
-      const total=8;
-      const need=total-correct.length;
-      const d=[];
-      while(d.length<need){
-        const c=allSyllables[Math.floor(Math.random()*allSyllables.length)];
-        if(!correct.includes(c)&&!d.includes(c)) d.push(c);
-      }
-      return d;
+function getDistractors(correct){
+  const total=8;
+  const need=total-correct.length;
+  const d=[];
+  while(d.length<need){
+    const c=allSyllables[Math.floor(Math.random()*allSyllables.length)];
+    if(!correct.includes(c)&&!d.includes(c)) d.push(c);
+  }
+  return d;
+}
+
+function nextWord(){
+  selected=[];
+  let idx;
+  do{ idx=Math.floor(Math.random()*words.length);}while(idx===current);
+  current=idx;
+  const w=words[current];
+  document.getElementById("wordText").textContent=w.char;
+  document.getElementById("selected").textContent="";
+  document.getElementById("feedback").textContent="";
+  updateProgressText();
+  renderOptions();
+  playTTS();
+}
+
+function updateProgressText(){
+  document.getElementById("progress").textContent =
+    isChallenge ? `挑戰模式：第 ${Math.min(roundCount+1,ROUND_TOTAL)} / ${ROUND_TOTAL} 題` : "自由練習";
+}
+
+function renderOptions(){
+  const btnDiv=document.getElementById("buttons");
+  btnDiv.innerHTML="";
+  const correct=words[current].zhuyin;
+  let options=[...correct,...getDistractors(correct)];
+  options.sort(()=>Math.random()-.5);
+  options.slice(0,8).forEach(syl=>{
+    const btn=document.createElement("button");
+    btn.textContent=syl;
+    btn.className="btn";
+    btn.onclick=()=>{
+      selected.push(syl);
+      document.getElementById("selected").textContent=selected.join(" ");
+    };
+    btnDiv.appendChild(btn);
+  });
+}
+
+/* ✅ 彈出提示框支援注音字體 */
+function showPopup(text, isCorrect) {
+  const popup = document.createElement("div");
+  popup.className = `result-popup ${isCorrect ? "correct" : "wrong"}`;
+  popup.style.fontFamily = "'BpmfIansui','Iansui','Noto Sans TC',sans-serif"; // ✅ 強制使用注音字體
+  popup.textContent = text;
+  document.body.appendChild(popup);
+  setTimeout(() => popup.classList.add("show"), 10);
+  setTimeout(() => {
+    popup.classList.remove("show");
+    setTimeout(() => popup.remove(), 300);
+  }, 1000);
+}
+
+/* ✅ 修正挑戰模式統計 */
+function submitAnswer(){
+  if(!words[current]) return;
+  if(selected.length===0){ setFeedback("先選注音再送出喔～","hint"); return; }
+
+  const ans=selected.join(" ");
+  const correct=words[current].zhuyin.join(" ");
+
+  if(isChallenge){
+    roundCount++;
+    if(ans===correct){
+      showPopup("✅ 答對了！", true);
+      setFeedback("✅ 正確！","ok");
+      roundCorrect++; // ✅ 累積答對題數
+      setTimeout(nextWord,2500);
+    } else {
+      showPopup("❌ 錯誤～", false);
+      setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");
+      setTimeout(nextWord,2500);
     }
-
-    function nextWord(){
-      selected=[];
-      let idx;
-      do{ idx=Math.floor(Math.random()*words.length);}while(idx===current);
-      current=idx;
-      const w=words[current];
-      document.getElementById("wordText").textContent=w.char;
-      document.getElementById("selected").textContent="";
-      document.getElementById("feedback").textContent="";
-      updateProgressText();
-      renderOptions();
-      playTTS();
+    if(roundCount>=ROUND_TOTAL) setTimeout(showChallengeSummary,800);
+  }else{
+    if(ans===correct){
+      showPopup("✅ 答對了！", true);
+      setFeedback("✅ 正確！","ok");
+      setTimeout(nextWord,2500);
+    } else {
+      showPopup("❌ 錯誤～", false);
+      setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");
     }
+  }
+}
 
-    function updateProgressText(){
-      document.getElementById("progress").textContent =
-        isChallenge ? `挑戰模式：第 ${Math.min(roundCount+1,ROUND_TOTAL)} / ${ROUND_TOTAL} 題` : "自由練習";
-    }
+/* ✅ 挑戰結束顯示分數＋注音字體 */
+function showChallengeSummary(){
+  const rate=Math.round((roundCorrect/ROUND_TOTAL)*100);
+  const msg=`本輪成績：${roundCorrect} / ${ROUND_TOTAL}\n正確率：${rate}%\n再挑戰一次吧～`;
 
-    function renderOptions(){
-      const btnDiv=document.getElementById("buttons");
-      btnDiv.innerHTML="";
-      const correct=words[current].zhuyin;
-      let options=[...correct,...getDistractors(correct)];
-      options.sort(()=>Math.random()-.5);
-      options.slice(0,8).forEach(syl=>{
-        const btn=document.createElement("button");
-        btn.textContent=syl;
-        btn.className="btn";
-        btn.onclick=()=>{
-          selected.push(syl);
-          document.getElementById("selected").textContent=selected.join(" ");
-        };
-        btnDiv.appendChild(btn);
-      });
-    }
+  const summary=document.createElement("div");
+  summary.className="result-popup correct";
+  summary.style.fontFamily="'BpmfIansui','Iansui','Noto Sans TC',sans-serif"; // ✅ 使用注音字體
+  summary.textContent="🎯 挑戰完成！";
+  document.body.appendChild(summary);
+  setTimeout(()=>summary.classList.add("show"),10);
+  setTimeout(()=>{
+    summary.classList.remove("show");
+    setTimeout(()=>summary.remove(),300);
+    alert(msg); // 用 alert 顯示詳細分數
+  },1500);
 
-    function showPopup(text, isCorrect) {
-      const popup = document.createElement("div");
-      popup.className = `result-popup ${isCorrect ? "correct" : "wrong"}`;
-      popup.textContent = text;
-      document.body.appendChild(popup);
-      setTimeout(() => popup.classList.add("show"), 10);
-      setTimeout(() => {
-        popup.classList.remove("show");
-        setTimeout(() => popup.remove(), 300);
-      }, 1000);
-    }
+  isChallenge=false;
+  setFeedback("回到自由練習","ok");
+  updateProgressText();
+}
 
-    function submitAnswer(){
-      if(!words[current]) return;
-      if(selected.length===0){ setFeedback("先選注音再送出喔～","hint"); return; }
-      const ans=selected.join(" ");
-      const correct=words[current].zhuyin.join(" ");
-      if(isChallenge){
-        roundCount++;
-        if(ans===correct){
-          showPopup("✅ 答對了！", true);
-          setFeedback("✅ 正確！","ok");
-          setTimeout(nextWord,2500);
-        } else {
-          showPopup("❌ 錯誤～", false);
-          setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");
-          setTimeout(nextWord,2500);
-        }
-        if(roundCount>=ROUND_TOTAL) setTimeout(showChallengeSummary,600);
-      }else{
-        if(ans===correct){
-          showPopup("✅ 答對了！", true);
-          setFeedback("✅ 正確！","ok");
-          setTimeout(nextWord,2500);
-        } else {
-          showPopup("❌ 錯誤～", false);
-          setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");
-        }
-      }
-    }
+function startChallenge(){
+  isChallenge=true;
+  roundCount=0;
+  roundCorrect=0;
+  setFeedback("🚀 挑戰開始！共 10 題","ok");
+  nextWord();
+}
 
-    function startChallenge(){
-      isChallenge=true;
-      roundCount=0;
-      roundCorrect=0;
-      setFeedback("🚀 挑戰開始！共 10 題","ok");
-      nextWord();
-    }
+function setFeedback(t,cls){
+  const e=document.getElementById("feedback");
+  e.textContent=t;
+  e.className=cls;
+}
 
-    function showChallengeSummary(){
-      const rate=Math.round((roundCorrect/ROUND_TOTAL)*100);
-      const msg=`本輪成績：${roundCorrect} / ${ROUND_TOTAL}\n正確率：${rate}%\n再挑戰一次吧～`;
-      alert(msg);
-      isChallenge=false;
-      setFeedback("回到自由練習","ok");
-      updateProgressText();
-    }
+function clearSelected(){
+  selected=[];
+  document.getElementById("selected").textContent="";
+  setFeedback("","");
+}
 
-    function setFeedback(t,cls){
-      const e=document.getElementById("feedback");
-      e.textContent=t;
-      e.className=cls;
-    }
+function playTTS(){
+  const w=words[current];
+  if(!w) return;
+  if("speechSynthesis" in window){
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(w.char);
+    u.lang="zh-TW";
+    speechSynthesis.speak(u);
+  }
+}
 
-    function clearSelected(){
-      selected=[];
-      document.getElementById("selected").textContent="";
-      setFeedback("","");
-    }
-
-    function playTTS(){
-      const w=words[current];
-      if(!w) return;
-      if("speechSynthesis" in window){
-        speechSynthesis.cancel();
-        const u=new SpeechSynthesisUtterance(w.char);
-        u.lang="zh-TW";
-        speechSynthesis.speak(u);
-      }
-    }
-
-    nextWord();
-  </script>
+nextWord();
+</script>
 </body>
 </html>
