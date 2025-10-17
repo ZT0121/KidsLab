@@ -138,7 +138,17 @@
   <script>
     let current=-1,selected=[],isChallenge=false;
     const ROUND_TOTAL=10; let roundCount=0,roundCorrect=0;
-    function getDistractors(correct){const need=Math.max(3,correct.length*2);const d=[];while(d.length<need){const c=allSyllables[Math.floor(Math.random()*allSyllables.length)];if(!correct.includes(c)&&!d.includes(c))d.push(c);}return d;}
+    function getDistractors(correct){
+  const total = 8; // 固定給 8 個選項
+  const need = total - correct.length;
+  const d=[];
+  while(d.length<need){
+    const c=allSyllables[Math.floor(Math.random()*allSyllables.length)];
+    if(!correct.includes(c)&&!d.includes(c))d.push(c);
+  }
+  return d;
+}
+
     function nextWord(){selected=[];let idx;do{idx=Math.floor(Math.random()*words.length);}while(idx===current);current=idx;const w=words[current];document.getElementById("wordText").textContent=w.char;document.getElementById("selected").textContent="";document.getElementById("feedback").textContent="";updateProgressText();renderOptions();playTTS();}
     function updateProgressText(){document.getElementById("progress").textContent=isChallenge?`挑戰模式：第 ${Math.min(roundCount+1,ROUND_TOTAL)} / ${ROUND_TOTAL} 題`:"自由練習";}
     function renderOptions(){const btnDiv=document.getElementById("buttons");btnDiv.innerHTML="";const correct=words[current].zhuyin;let options=[...correct,...getDistractors(correct)];options.sort(()=>Math.random()-.5);options.forEach(syl=>{const btn=document.createElement("button");btn.textContent=syl;btn.className="btn";btn.onclick=()=>{selected.push(syl);document.getElementById("selected").textContent=selected.join(" ");};btnDiv.appendChild(btn);});}
