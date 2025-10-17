@@ -141,16 +141,16 @@ a.card {
   overflow: hidden;
 }
 a.card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--glow);
-  filter: saturate(1.05);
+  transform: none;
+  box-shadow: var(--glow-soft);
+  filter: none;
 }
 .emoji {
   font-size: 42px;
   margin-bottom: 10px;
   transition: transform .18s ease;
 }
-a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
+a.card:hover .emoji { transform: none; }
 .ttl {
   display: block;
   font-size: 24px;
