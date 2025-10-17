@@ -15,11 +15,11 @@ const words = [
   { char: "草地",     zhuyin: ["ㄘㄠˇ", "ㄉㄧˋ"] },
   { char: "老師",     zhuyin: ["ㄌㄠˇ", "ㄕ"] },
   { char: "學生",     zhuyin: ["ㄒㄩㄝˊ", "ㄕㄥ"] },
-  { char: "弟弟",     zhuyin: ["ㄉ一ˋ", "ㄉㄧ˙"] },
+  { char: "弟弟",     zhuyin: ["ㄉㄧˋ", "ㄉㄧ˙"] },
   { char: "跑步",     zhuyin: ["ㄆㄠˇ", "ㄅㄨˋ"] },
   { char: "毛筆",     zhuyin: ["ㄇㄠˊ", "ㄅㄧˇ"] },
-  { char: "笛子",     zhuyin: ["ㄉ一ˊ", "ㄗ˙"] },
-  { char: "皮包",     zhuyin: ["ㄆ一ˊ", "ㄅㄠ"] },
+  { char: "笛子",     zhuyin: ["ㄉㄧˊ", "ㄗ˙"] },
+  { char: "皮包",     zhuyin: ["ㄆㄧˊ", "ㄅㄠ"] },
   { char: "菜刀",     zhuyin: ["ㄘㄞˋ", "ㄉㄠ"] },
   { char: "毛衣",     zhuyin: ["ㄇㄠˊ", "ㄧ"] },
   { char: "稻米",     zhuyin: ["ㄉㄠˋ", "ㄇㄧˇ"] },
@@ -181,6 +181,6 @@ const words = [
   { char: "學校",     zhuyin: ["ㄒㄩㄝˊ", "ㄒㄧㄠˋ"] },
   { char: "輪流",     zhuyin: ["ㄌㄨㄣˊ", "ㄌㄧㄡˊ"] },
   { char: "團體",     zhuyin: ["ㄊㄨㄢˊ", "ㄊㄧˇ"] },
-
+  { char: "名聲",     zhuyin: ["ㄇㄧㄥˊ", "ㄕㄥ"] },
 
 ];
