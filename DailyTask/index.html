@@ -4,16 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hunter 的每日任務</title>
+
   <style>
     @font-face {
-      font-family: 'Cubic11';
-      src: url('./Cubic_11.woff2') format('woff2');
-      font-weight: normal;
-      font-style: normal;
+      font-family: 'BpmfIansui';
+      src: url('../BpmfIansui-Regular.ttf') format('truetype');
+      font-display: swap;
     }
 
     body{
-      margin:0; font-family:"Cubic11", monospace, sans-serif;
+      margin:0; font-family:'BpmfIansui',"Noto Sans TC",sans-serif;
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
       color:#fff; text-align:center; padding:20px;
@@ -35,7 +35,7 @@
       to { opacity: 0; transform: translate(-50%, -150%); }
     }
     button{
-      font-family:"Cubic11", monospace, sans-serif;
+      font-family:'BpmfIansui',"Noto Sans TC",sans-serif;
       padding:10px 16px; margin:6px; border:3px solid #000; background:#8b5;
       color:#fff; cursor:pointer; text-transform:uppercase;
     }
@@ -102,9 +102,9 @@
   </div>
 
   <div class="card">
-  <div>測試工具（僅大人使用）</div>
-  <button id="forceMoveBtn" class="small" style="background:#b22222; border:2px solid #700">🔒 強制搬移任務到今天</button>
-</div>
+    <div>測試工具（僅大人使用）</div>
+    <button id="forceMoveBtn" class="small" style="background:#b22222; border:2px solid #700">🔒 強制搬移任務到今天</button>
+  </div>
 
   <script src="tasks.js"></script>
   <script src="main.js"></script>
