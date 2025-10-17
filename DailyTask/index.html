@@ -56,8 +56,16 @@
     .xp-fill{
       background:#4caf50; height:100%; width:0%; transition:width .4s;
     }
-    .xp-text{ position:absolute; top:0; left:50%; transform:translateX(-50%); font-size:0.9rem; color:#fff; }
-    ul{ text-align:left; margin:10px auto; max-width:400px; }
+.xp-text{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:0.9rem;
+  color:#fff;
+  white-space:nowrap; /* ✅ 不自動換行 */
+}
+
     li{ margin:4px 0; }
 
     /* ========== KidsLab 導覽列 ========== */
