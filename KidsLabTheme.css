@@ -1,0 +1,115 @@
+/* ========= KidsLab 主題共用樣式 ========= */
+
+/* 字體 */
+@font-face {
+  font-family: 'BpmfIansui';
+  src: url('./BpmfIansui-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* 主題顏色變數（莫蘭迪藍灰） */
+:root {
+  --b1: #A3BFD9;
+  --b2: #7C9CBF;
+  --ink: #2F3E46;
+  --title: #2C3E50;
+  --ok: #4CAF50;
+  --no: #DC2626;
+  --glow: 0 12px 30px rgba(124,156,191,.35);
+  --glow-soft: 0 8px 20px rgba(124,156,191,.25);
+}
+
+/* 全域設定 */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  font-family: 'BpmfIansui', 'Noto Sans TC', sans-serif;
+  color: var(--ink);
+  background: linear-gradient(180deg, #EEF3F7 0%, #F8FAFB 100%);
+}
+
+/* 標題 */
+h1 {
+  color: var(--title);
+  margin: 0 0 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+h2, h3 {
+  color: var(--title);
+}
+
+/* 主要按鈕 */
+.btn {
+  font-family: 'BpmfIansui','Noto Sans TC',sans-serif !important;
+  font-size: 22px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  color: #fff;
+  background: linear-gradient(145deg, var(--b1), var(--b2));
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(124,156,191,0.35);
+  transition: transform .1s, box-shadow .2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(124,156,191,0.45);
+}
+.btn-ghost {
+  background: #fff;
+  border: 2px solid var(--b1);
+  color: var(--title);
+  box-shadow: none;
+}
+.btn-ghost:hover {
+  background: #E6EDF3;
+}
+
+/* 導覽列 */
+.top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  font-family: 'BpmfIansui','Noto Sans TC',sans-serif;
+}
+
+.top-nav.light a {
+  background: #fff;
+  color: var(--title);
+  border: 2px solid var(--b1);
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 3px 6px rgba(124,156,191,0.25);
+  transition: all 0.2s;
+}
+.top-nav.light a:hover {
+  background: linear-gradient(145deg, var(--b1), var(--b2));
+  color: #fff;
+}
+.top-nav.light a.active {
+  background: linear-gradient(145deg, var(--b1), var(--b2));
+  color: #fff;
+}
+
+/* 頁尾 */
+footer {
+  margin-top: 40px;
+  color: var(--title);
+  font-size: 15px;
+  border-top: 2px solid #D0DAE4;
+  padding: 20px 0;
+}
+
+/* 響應式 */
+@media (max-width: 480px) {
+  .btn {
+    font-size: 18px;
+    padding: 8px 14px;
+  }
+}
