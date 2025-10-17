@@ -15,16 +15,27 @@ html, body {
   margin: 0;
   padding: 0;
   background: #F9FAFB;
-  font-family: 'Iansui', 'Noto Sans TC', sans-serif;
-  font-size: calc(16px + 0.4vw);
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* 主區塊預留底部空間，避免固定操作列遮住 */
+/* 主體空間預留底部 */
 body { padding-bottom: 90px; }
 
-/* ===== 原樣式保留 ===== */
+/* ===== 全站字體設定 ===== */
+body, button, h1, h2, h3, #progress, #feedback, #selected, #buttons, .result-popup, .bottom-bar {
+  font-family: 'BpmfIansui','Iansui','Noto Sans TC',sans-serif !important;
+}
+
+/* 題目區塊例外：不使用注音字體 */
+#wordText {
+  font-family: 'Iansui','Noto Sans TC',sans-serif !important;
+  font-size: 72px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+  margin-bottom: 6px;
+}
+
+/* ===== 主要區塊 ===== */
 #toolbar {
   display: flex;
   justify-content: center;
@@ -60,11 +71,7 @@ body { padding-bottom: 90px; }
   transition: 0.2s;
 }
 #playBtn:hover { background: var(--b1); color: #fff; }
-#wordText {
-  font-size: 72px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
-  margin-bottom: 6px;
-}
+
 #selected {
   text-align: center;
   font-size: 28px;
@@ -79,6 +86,7 @@ body { padding-bottom: 90px; }
   max-width: 680px;
   margin: 0 auto 24px;
   justify-items: center;
+  margin-bottom: calc(120px + env(safe-area-inset-bottom)); /* 避免被底部操作列遮住 */
 }
 #buttons .btn {
   width: 100%;
@@ -98,16 +106,24 @@ body { padding-bottom: 90px; }
 /* ===== 固定底部操作列 ===== */
 .bottom-bar {
   position: fixed;
-  bottom: 0; left: 0; width: 100%;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background: #F3F4F6;
-  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
   padding: 12px 8px calc(12px + env(safe-area-inset-bottom));
   box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
   z-index: 20;
 }
-.bottom-bar .btn { flex: 1 1 30%; min-width: 120px; }
+.bottom-bar .btn {
+  flex: 1 1 30%;
+  min-width: 120px;
+}
 
-/* ===== 浮出提示框（保留） ===== */
+/* ===== 浮出提示框 ===== */
 .result-popup {
   position: fixed;
   top: 50%;
@@ -123,23 +139,32 @@ body { padding-bottom: 90px; }
   z-index: 999;
   transition: all 0.3s ease;
   pointer-events: none;
-  font-family: 'BpmfIansui', 'Iansui', 'Noto Sans TC', sans-serif; /* ✅ 新增這行 */
 }
-.result-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.result-popup.correct { background: rgba(76,175,80,.92); box-shadow: 0 0 20px rgba(76,175,80,.5); }
-.result-popup.wrong { background: rgba(244,67,54,.9); box-shadow: 0 0 20px rgba(244,67,54,.5); }
+.result-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.result-popup.correct {
+  background: rgba(76,175,80,0.92);
+  box-shadow: 0 0 20px rgba(76,175,80,0.5);
+}
+.result-popup.wrong {
+  background: rgba(244,67,54,0.9);
+  box-shadow: 0 0 20px rgba(244,67,54,0.5);
+}
 
-/* ===== 自動縮放 ===== */
+/* ===== 響應式 ===== */
 @media (orientation: landscape) {
   #wordText { font-size: 56px; }
   #buttons .btn { font-size: 0.9em; min-height: 44px; }
 }
 @media (max-width: 600px) {
-  #buttons { grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 95%; }
+  #buttons {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 95%;
+  }
 }
-
-/* ✅ 避免選項被底部固定列遮住 */
-#buttons { margin-bottom: calc(120px + env(safe-area-inset-bottom)); }
 </style>
 </head>
 
@@ -167,7 +192,6 @@ body { padding-bottom: 90px; }
   <div id="buttons"></div>
   <div id="feedback"></div>
 
-  <!-- ✅ 固定底部操作列 -->
   <div class="bottom-bar">
     <button class="btn" onclick="submitAnswer()">送出</button>
     <button class="btn" onclick="nextWord()">下一題</button>
@@ -179,8 +203,7 @@ body { padding-bottom: 90px; }
   <script src="words.js"></script>
   <script src="zhuyin-all.js"></script>
 
-  <!-- ✅ 加回主要 JS 邏輯 -->
-<script>
+  <script>
 let current=-1,selected=[],isChallenge=false;
 const ROUND_TOTAL=10; 
 let roundCount=0,roundCorrect=0;
@@ -191,7 +214,7 @@ function getDistractors(correct){
   const d=[];
   while(d.length<need){
     const c=allSyllables[Math.floor(Math.random()*allSyllables.length)];
-    if(!correct.includes(c)&&!d.includes(c)) d.push(c);
+    if(!correct.includes(c)&&!d.includes(c))d.push(c);
   }
   return d;
 }
@@ -211,8 +234,8 @@ function nextWord(){
 }
 
 function updateProgressText(){
-  document.getElementById("progress").textContent =
-    isChallenge ? `挑戰模式：第 ${Math.min(roundCount+1,ROUND_TOTAL)} / ${ROUND_TOTAL} 題` : "自由練習";
+  document.getElementById("progress").textContent=
+    isChallenge?`挑戰模式：第 ${Math.min(roundCount+1,ROUND_TOTAL)} / ${ROUND_TOTAL} 題`:"自由練習";
 }
 
 function renderOptions(){
@@ -233,11 +256,9 @@ function renderOptions(){
   });
 }
 
-/* ✅ 彈出提示框支援注音字體 */
 function showPopup(text, isCorrect) {
   const popup = document.createElement("div");
   popup.className = `result-popup ${isCorrect ? "correct" : "wrong"}`;
-  popup.style.fontFamily = "'BpmfIansui','Iansui','Noto Sans TC',sans-serif"; // ✅ 強制使用注音字體
   popup.textContent = text;
   document.body.appendChild(popup);
   setTimeout(() => popup.classList.add("show"), 10);
@@ -247,27 +268,24 @@ function showPopup(text, isCorrect) {
   }, 1000);
 }
 
-/* ✅ 修正挑戰模式統計 */
 function submitAnswer(){
-  if(!words[current]) return;
-  if(selected.length===0){ setFeedback("先選注音再送出喔～","hint"); return; }
-
+  if(!words[current])return;
+  if(selected.length===0){setFeedback("先選注音再送出喔～","hint");return;}
   const ans=selected.join(" ");
   const correct=words[current].zhuyin.join(" ");
-
   if(isChallenge){
     roundCount++;
     if(ans===correct){
       showPopup("✅ 答對了！", true);
-      setFeedback("✅ 正確！","ok");
-      roundCorrect++; // ✅ 累積答對題數
+      setFeedback("✅ 正確！", "ok");
+      roundCorrect++;
       setTimeout(nextWord,2500);
     } else {
       showPopup("❌ 錯誤～", false);
-      setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");
+      setFeedback(`❌ 錯誤，正確答案：${correct}`, "err");
       setTimeout(nextWord,2500);
     }
-    if(roundCount>=ROUND_TOTAL) setTimeout(showChallengeSummary,800);
+    if(roundCount>=ROUND_TOTAL)setTimeout(showChallengeSummary,800);
   }else{
     if(ans===correct){
       showPopup("✅ 答對了！", true);
@@ -280,23 +298,19 @@ function submitAnswer(){
   }
 }
 
-/* ✅ 挑戰結束顯示分數＋注音字體 */
 function showChallengeSummary(){
   const rate=Math.round((roundCorrect/ROUND_TOTAL)*100);
   const msg=`本輪成績：${roundCorrect} / ${ROUND_TOTAL}\n正確率：${rate}%\n再挑戰一次吧～`;
-
   const summary=document.createElement("div");
   summary.className="result-popup correct";
-  summary.style.fontFamily="'BpmfIansui','Iansui','Noto Sans TC',sans-serif"; // ✅ 使用注音字體
   summary.textContent="🎯 挑戰完成！";
   document.body.appendChild(summary);
   setTimeout(()=>summary.classList.add("show"),10);
   setTimeout(()=>{
     summary.classList.remove("show");
     setTimeout(()=>summary.remove(),300);
-    alert(msg); // 用 alert 顯示詳細分數
+    alert(msg);
   },1500);
-
   isChallenge=false;
   setFeedback("回到自由練習","ok");
   updateProgressText();
@@ -324,8 +338,8 @@ function clearSelected(){
 
 function playTTS(){
   const w=words[current];
-  if(!w) return;
-  if("speechSynthesis" in window){
+  if(!w)return;
+  if("speechSynthesis"in window){
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(w.char);
     u.lang="zh-TW";
@@ -334,6 +348,6 @@ function playTTS(){
 }
 
 nextWord();
-</script>
+  </script>
 </body>
 </html>
