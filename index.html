@@ -36,8 +36,13 @@
       position:relative;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       padding:30px 22px; border-radius:20px; text-decoration:none; outline:none;
-      color:#fff; background:linear-gradient(145deg,var(--b1),var(--b2));
-      box-shadow:var(--glow-soft);
+      color:#fff; a.card{
+  background:linear-gradient(145deg,#A3BFD9,#7C9CBF);
+  box-shadow:0 4px 10px rgba(124,156,191,0.35);
+  color:#fff;
+  transition:transform .18s ease, box-shadow .2s ease, filter .2s ease;
+}
+
       transition:transform .18s ease, box-shadow .2s ease, filter .2s ease;
       overflow:hidden;
     }
