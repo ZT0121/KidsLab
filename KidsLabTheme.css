@@ -203,8 +203,8 @@ a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
 
 /* ======= 數字分解練習：圓球置中＋區塊去白底最終版 ======= */
 .tray {
-  background: transparent;           /* 移除白底 */
-  border: 2px dashed #C7D6EA;       /* 淡藍外框 */
+  background: transparent;
+  border: 2px dashed #C7D6EA;
   border-radius: 14px;
   padding: 18px 14px;
   margin: 18px auto;
@@ -212,6 +212,7 @@ a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .trayTitle {
@@ -221,7 +222,6 @@ a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
   text-align: center;
 }
 
-/* ✅ 統一置中、移除白色背景 */
 #drop, #pool {
   display: flex;
   flex-wrap: wrap;
@@ -231,18 +231,16 @@ a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
   padding: 12px 10px;
   border-radius: 12px;
   border: 2px dashed #A3BFD9;
-  background: transparent;           /* 無底色 */
-  width: 85%;
+  background: transparent;
+  width: 100%;               /* 改這裡 */
   min-height: 68px;
   transition: border-color 0.2s ease;
 }
 
-/* ✅ 滑鼠移入時輕微高亮 */
 #drop:hover, #pool:hover {
   border-color: #7C9CBF;
 }
 
-/* ✅ 圓球外觀 */
 .dot {
   width: 30px;
   height: 30px;
