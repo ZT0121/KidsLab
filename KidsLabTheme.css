@@ -169,11 +169,10 @@ a.card:hover .emoji { transform: none; }
 
 /* ✅ 修正注音卡片垂直高度與對齊一致 */
 .emoji.zhuyin-hero {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  width: 100%;
+  gap: 6px;
   height: 64px;
   text-align: center;
   transform: translateX(8px);
