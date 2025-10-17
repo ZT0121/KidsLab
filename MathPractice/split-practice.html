@@ -8,20 +8,57 @@
 <link rel="stylesheet" href="../KidsLabTheme.css">
 <link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
 
-
 <style>
+/* 置中與樣式修正版 */
 .center-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
 }
-</style>
-</head>
 
-  
+/* 外框容器 */
+.tray {
+  border: 2px dashed #BFDBFE;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px auto;
+  max-width: 680px;
+  background: transparent; /* 移除白底 */
+}
+
+/* 答案框 */
+#drop {
+  min-height: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  border: 3px dashed #93C5FD;
+  border-radius: 14px;
+  background: transparent; /* 移除白底 */
+}
+
+/* 圓點 */
+.dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #7C9CBF;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: grab;
+}
+
+/* 拖曳中 */
+.dragging {
+  opacity: 0.9;
+  transform: scale(1.06);
+  filter: saturate(1.1);
+}
+</style>
 </head>
 
 <body>
@@ -58,61 +95,91 @@
 
   <footer>© 2025 KidsLab · Created with ❤️ by ZTing</footer>
 
-  <script>
-    // 保留功能不變
-    let target=0, known=0, answer=0, correctCount=0, wrongCount=0;
-    const problem=document.getElementById('problem');
-    const knownRow=document.getElementById('knownRow');
-    const pool=document.getElementById('pool');
-    const drop=document.getElementById('drop');
-    const feedback=document.getElementById('feedback');
-    const stats=document.getElementById('stats');
-    const nextBtn=document.getElementById('nextBtn');
-    const checkBtn=document.getElementById('checkBtn');
-    const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-    const updateStats=()=>{stats.textContent=`完成題數：${correctCount}　｜　答錯次數：${wrongCount}`;};
+<script>
+let target=0, known=0, answer=0, correctCount=0, wrongCount=0;
+const problem=document.getElementById('problem');
+const knownRow=document.getElementById('knownRow');
+const pool=document.getElementById('pool');
+const drop=document.getElementById('drop');
+const feedback=document.getElementById('feedback');
+const stats=document.getElementById('stats');
+const nextBtn=document.getElementById('nextBtn');
+const checkBtn=document.getElementById('checkBtn');
+const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const updateStats=()=>{stats.textContent=`完成題數：${correctCount}　｜　答錯次數：${wrongCount}`;};
 
-    function newQuestion(){
-      feedback.textContent=''; drop.innerHTML=''; pool.innerHTML=''; knownRow.innerHTML='';
-      target=randInt(2,10); const a=randInt(1,target-1);
-      known=Math.random()<0.5?a:target-a; answer=target-known;
-      const leftBox=Math.random()<0.5;
-      problem.textContent = leftBox ? `${target} → ☐ + ${known}` : `${target} → ${known} + ☐`;
-      for(let i=0;i<known;i++) knownRow.appendChild(makeDot(false));
-      const poolCount=Math.max(10, answer); for(let i=0;i<poolCount;i++) pool.appendChild(makeDot(true));
-    }
+function newQuestion(){
+  feedback.textContent=''; drop.innerHTML=''; pool.innerHTML=''; knownRow.innerHTML='';
+  target=randInt(2,10); const a=randInt(1,target-1);
+  known=Math.random()<0.5?a:target-a; answer=target-known;
+  const leftBox=Math.random()<0.5;
+  problem.textContent = leftBox ? `${target} → ☐ + ${known}` : `${target} → ${known} + ☐`;
+  for(let i=0;i<known;i++) knownRow.appendChild(makeDot(false));
+  const poolCount=Math.max(10, answer);
+  for(let i=0;i<poolCount;i++) pool.appendChild(makeDot(true));
+}
 
-    function makeDot(draggable){
-      const d=document.createElement('div'); d.className='dot';
-      if(!draggable) return d;
-      let startX=0,startY=0,ghost=null;
-      const onPointerDown=(e)=>{e.preventDefault();const rect=d.getBoundingClientRect();
-        startX=e.clientX-rect.left;startY=e.clientY-rect.top;
-        ghost=d.cloneNode(true);ghost.style.position='fixed';ghost.style.left=rect.left+'px';ghost.style.top=rect.top+'px';
-        ghost.style.pointerEvents='none';ghost.classList.add('dragging');document.body.appendChild(ghost);
-        document.addEventListener('pointermove',onMove);document.addEventListener('pointerup',onUp,{once:true});};
-      const onMove=(e)=>{if(!ghost)return;ghost.style.left=(e.clientX-startX)+'px';ghost.style.top=(e.clientY-startY)+'px';};
-      const onUp=(e)=>{document.removeEventListener('pointermove',onMove);if(!ghost)return;
-        const r=drop.getBoundingClientRect();const x=e.clientX,y=e.clientY;const inDrop=(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom);
-        ghost.remove();ghost=null;if(inDrop){drop.appendChild(simpleDot());}};
-      d.addEventListener('pointerdown',onPointerDown);return d;
-    }
+function makeDot(draggable){
+  const d=document.createElement('div'); d.className='dot';
+  if(!draggable) return d;
+  let startX=0,startY=0,ghost=null;
+  const onPointerDown=(e)=>{e.preventDefault();
+    const rect=d.getBoundingClientRect();
+    startX=e.clientX-rect.left;startY=e.clientY-rect.top;
+    ghost=d.cloneNode(true);
+    ghost.style.position='fixed';
+    ghost.style.left=rect.left+'px';
+    ghost.style.top=rect.top+'px';
+    ghost.style.pointerEvents='none';
+    ghost.classList.add('dragging');
+    document.body.appendChild(ghost);
+    document.addEventListener('pointermove',onMove);
+    document.addEventListener('pointerup',onUp,{once:true});
+  };
+  const onMove=(e)=>{
+    if(!ghost)return;
+    ghost.style.left=(e.clientX-startX)+'px';
+    ghost.style.top=(e.clientY-startY)+'px';
+  };
+  const onUp=(e)=>{
+    document.removeEventListener('pointermove',onMove);
+    if(!ghost)return;
+    const r=drop.getBoundingClientRect();
+    const x=e.clientX,y=e.clientY;
+    const inDrop=(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom);
+    ghost.remove();ghost=null;
+    if(inDrop){drop.appendChild(simpleDot());}
+  };
+  d.addEventListener('pointerdown',onPointerDown);
+  return d;
+}
 
-    function simpleDot(){
-      const d=document.createElement('div');d.className='dot';d.style.cursor='pointer';
-      d.title='點一下移回下方圓點區';d.addEventListener('click',()=>{pool.appendChild(makeDot(true));d.remove();});
-      return d;
-    }
+function simpleDot(){
+  const d=document.createElement('div');
+  d.className='dot';
+  d.style.cursor='pointer';
+  d.title='點一下移回下方圓點區';
+  d.addEventListener('click',()=>{pool.appendChild(makeDot(true));d.remove();});
+  return d;
+}
 
-    function checkAnswer(){
-      const count=drop.children.length;
-      if(count===answer){feedback.style.color='var(--ok)';feedback.textContent='✅ 答對了！';correctCount++;updateStats();setTimeout(newQuestion,1200);}
-      else{feedback.style.color='var(--no)';feedback.textContent='❌ 再試一次';wrongCount++;updateStats();}
-    }
+function checkAnswer(){
+  const count=drop.children.length;
+  if(count===answer){
+    feedback.style.color='var(--ok)';
+    feedback.textContent='✅ 答對了！';
+    correctCount++; updateStats();
+    setTimeout(newQuestion,1200);
+  }else{
+    feedback.style.color='var(--no)';
+    feedback.textContent='❌ 再試一次';
+    wrongCount++; updateStats();
+  }
+}
 
-    nextBtn.addEventListener('click',newQuestion);
-    checkBtn.addEventListener('click',checkAnswer);
-    updateStats(); newQuestion();
-  </script>
+nextBtn.addEventListener('click',newQuestion);
+checkBtn.addEventListener('click',checkAnswer);
+updateStats(); newQuestion();
+</script>
 </body>
 </html>
