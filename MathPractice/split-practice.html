@@ -2,14 +2,13 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>數字分解練習｜KidsLab</title>
 
 <link rel="stylesheet" href="../KidsLabTheme.css">
 <link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
 
 <style>
-/* 置中與樣式修正版 */
 .center-wrap {
   display: flex;
   justify-content: center;
@@ -31,6 +30,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  touch-action: none; /* ✅ 防止橫向拖曳時整頁滑動 */
 }
 
 /* 答案框與可拖曳區 */
@@ -46,6 +46,7 @@
   background: transparent;
   width: 100%;
   box-sizing: border-box;
+  touch-action: none; /* ✅ 同樣禁止預設滾動行為 */
 }
 
 /* 圓點 */
@@ -61,7 +62,7 @@
   justify-content: center;
 }
 
-/* 已知數字的圓點列置中修正 */
+/* 已知數字的圓點列 */
 #knownRow {
   display: flex;
   justify-content: center;
@@ -72,16 +73,14 @@
   width: 100%;
 }
 
-  
-/* 拖曳中 */
 .dragging {
   opacity: 0.9;
   transform: scale(1.06);
   filter: saturate(1.1);
 }
 
-  #problem {
-  font-size: 28px; /* 和 h1 標題同級大小 */
+#problem {
+  font-size: 28px;
   font-weight: 700;
   color: var(--title);
   margin: 12px 0;
@@ -89,8 +88,36 @@
   font-family: 'BpmfIansui','Iansui','Noto Sans TC',sans-serif;
 }
 
+/* ✅ 浮出提示框 */
+.result-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  padding: 20px 36px;
+  border-radius: 12px;
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  opacity: 0;
+  z-index: 999;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.result-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.result-popup.correct {
+  background: rgba(76, 175, 80, 0.92);
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+}
+.result-popup.wrong {
+  background: rgba(244, 67, 54, 0.9);
+  box-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
+}
 </style>
-
 </head>
 
 <body>
@@ -103,8 +130,6 @@
 
   <h1>🔢 數字分解練習</h1>
   <div id="subtitle">一年級｜10 以內</div>
-
-
 
   <div id="problem">—</div>
   <div id="knownRow"></div>
@@ -171,7 +196,7 @@ function showPopup(text, isCorrect) {
   }, 1000);
 }
 
-/* ===== 改良可拖曳支援滑鼠＋手機 ===== */
+/* ===== 可拖曳支援滑鼠＋觸控（防頁面滑動） ===== */
 function makeDot(draggable){
   const d=document.createElement('div');
   d.className='dot';
@@ -203,7 +228,6 @@ function makeDot(draggable){
     if(inDrop){ drop.appendChild(simpleDot()); }
   }
 
-  // 滑鼠事件
   d.addEventListener('pointerdown', e=>{
     e.preventDefault();
     startDrag(e.clientX,e.clientY);
@@ -217,19 +241,22 @@ function makeDot(draggable){
     document.addEventListener('pointerup',up);
   });
 
-  // 觸控事件
+  /* ✅ 加 preventDefault 避免滾動 */
   d.addEventListener('touchstart', e=>{
     const t=e.touches[0];
     startDrag(t.clientX,t.clientY);
-  });
+  }, { passive:false });
+
   d.addEventListener('touchmove', e=>{
+    e.preventDefault();
     const t=e.touches[0];
     moveDrag(t.clientX,t.clientY);
-  });
+  }, { passive:false });
+
   d.addEventListener('touchend', e=>{
     const t=e.changedTouches[0];
     endDrag(t.clientX,t.clientY);
-  });
+  }, { passive:false });
 
   return d;
 }
@@ -269,39 +296,5 @@ checkBtn.addEventListener('click',checkAnswer);
 updateStats();
 newQuestion();
 </script>
-
-<style>
-/* ✅ 浮出提示框樣式 */
-.result-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  padding: 20px 36px;
-  border-radius: 12px;
-  font-size: 36px;
-  font-weight: bold;
-  color: #fff;
-  text-align: center;
-  opacity: 0;
-  z-index: 999;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-.result-popup.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.result-popup.correct {
-  background: rgba(76, 175, 80, 0.92);
-  box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
-}
-.result-popup.wrong {
-  background: rgba(244, 67, 54, 0.9);
-  box-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
-}
-</style>
-
-
 </body>
 </html>
