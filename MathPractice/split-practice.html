@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>數字分解練習</title>
+<title>數字分解練習｜KidsLab</title>
 
-<!-- 字體 -->
 <link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
 
 <style>
@@ -15,64 +14,115 @@
     font-display: swap;
   }
 
-  :root{
-    --blue1:#3B82F6;
-    --blue2:#2563EB;
-    --ink:#1A365D;
-    --title:#1E40AF;
-    --ok:#059669;
-    --no:#DC2626;
+  :root {
+    --blue1:#AFC2D5;  /* 淺莫蘭迪藍 */
+    --blue2:#8FAFC5;  /* 深莫蘭迪藍 */
+    --ink:#2E3A46;    /* 文字深灰藍 */
+    --title:#4A5F73;  /* 標題灰藍 */
+    --ok:#5C897C;
+    --no:#C55E5E;
   }
 
   body, h1, h2, h3, button, #problem, #feedback, #stats, nav, a, footer {
     font-family:'BpmfIansui','Noto Sans TC',sans-serif !important;
   }
 
-  body{
-    background:linear-gradient(180deg,#E6F0FF 0%,#F7FAFF 100%);
+  body {
+    background:linear-gradient(180deg,#F4F6F8 0%,#E8EDF1 100%);
     color:var(--ink);
     text-align:center;
     margin:0; padding:20px;
   }
 
-  h1{ color:var(--title); margin:0 0 10px; text-shadow:1px 1px 2px rgba(0,0,0,0.05);}
-  #subtitle{ color:var(--blue2); margin:6px 0 14px; font-weight:700; }
+  h1 { color:var(--title); margin:0 0 10px; text-shadow:1px 1px 2px rgba(0,0,0,0.05);}
+  #subtitle { color:var(--blue2); margin:6px 0 14px; font-weight:700; }
 
-  .btn{
-    font-size:22px; padding:10px 16px; border-radius:12px; border:none; color:#fff;
-    background:linear-gradient(145deg,var(--blue1),var(--blue2)); cursor:pointer;
-    box-shadow:0 4px 10px rgba(37,99,235,0.3);
-    transition:transform .1s, box-shadow .2s;
+  /* 按鈕 */
+  .btn {
+    font-size:22px;
+    padding:10px 16px;
+    border-radius:12px;
+    border:none;
+    background:linear-gradient(145deg,#D7E0E8,#B7C8D8);
+    color:#2F3E46;
+    text-shadow:0 1px 2px rgba(255,255,255,0.5);
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(150,170,190,0.25);
+    transition:transform 0.1s, box-shadow 0.2s;
   }
-  .btn:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(37,99,235,0.4);}
-  .btn-ghost{ background:#fff; border:2px solid var(--blue1); color:var(--title); }
-  .btn-ghost:hover{ background:#DBEAFE; }
+  .btn:hover {
+    transform:translateY(-2px);
+    box-shadow:0 6px 14px rgba(150,170,190,0.35);
+    filter:brightness(1.03);
+  }
 
-  #toolbar{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:10px 0 16px; }
+  .btn-ghost {
+    background:#fff;
+    border:2px solid var(--blue2);
+    color:var(--title);
+    box-shadow:none;
+  }
+  .btn-ghost:hover { background:#E8EDF1; }
 
-  #problem{ font-size:40px; font-weight:800; margin:10px 0 6px; }
-  #knownRow{ display:flex; justify-content:center; gap:8px; margin:6px 0 12px; }
-  .dot{ width:28px; height:28px; border-radius:50%; background:var(--blue1); box-shadow:0 1px 0 rgba(0,0,0,.08); }
+  #toolbar {
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:10px 0 16px;
+  }
 
-  .tray{ background:#F0F5FF; border:2px dashed #BFDBFE; border-radius:14px; padding:12px; margin:12px auto; max-width:620px; }
-  .trayTitle{ font-size:16px; color:var(--title); margin:0 0 8px; }
-  #drop{ min-height:60px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:10px; background:#fff; border:3px solid #93C5FD; border-radius:14px; }
-  #pool{ min-height:60px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
-  #pool .dot{ cursor:grab; }
-  .dragging{ opacity:.9; transform:scale(1.06); filter:saturate(1.1); }
+  #problem { font-size:40px; font-weight:800; margin:10px 0 6px; color:var(--title);}
+  #knownRow { display:flex; justify-content:center; gap:8px; margin:6px 0 12px; }
 
-  #feedback{ font-size:22px; font-weight:800; min-height:30px; margin-top:8px; }
-  #stats{ font-size:18px; color:var(--blue2); font-weight:700; margin-top:8px; }
+  .dot {
+    width:28px; height:28px; border-radius:50%;
+    background:var(--blue2);
+    box-shadow:0 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .tray {
+    background:#F0F2F4;
+    border:2px dashed #B7C8D8;
+    border-radius:14px;
+    padding:12px;
+    margin:12px auto;
+    max-width:620px;
+  }
+  .trayTitle { font-size:16px; color:var(--title); margin:0 0 8px; }
+
+  #drop {
+    min-height:60px;
+    display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+    padding:10px;
+    background:#fff;
+    border:3px solid #C6D4DF;
+    border-radius:14px;
+  }
+  #pool {
+    min-height:60px;
+    display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  }
+  #pool .dot { cursor:grab; }
+  .dragging { opacity:.9; transform:scale(1.06); filter:saturate(1.1); }
+
+  #feedback {
+    font-size:22px;
+    font-weight:800;
+    min-height:30px;
+    margin-top:8px;
+  }
+  #stats { font-size:18px; color:var(--blue2); font-weight:700; margin-top:8px; }
 
   footer {
     margin-top:40px;
     color:var(--title);
     font-size:16px;
-    border-top:2px solid #BFDBFE;
+    border-top:2px solid #C6D4DF;
     padding:20px 0;
   }
 
-  /* 頂部導覽列 */
+  /* 導覽列 */
   .top-nav {
     display:flex;
     justify-content:center;
@@ -83,20 +133,20 @@
 
   .top-nav.light a {
     background:#fff;
-    color:#1E40AF;
-    border:2px solid #3B82F6;
+    color:var(--title);
+    border:2px solid var(--blue2);
     padding:8px 14px;
     border-radius:8px;
     text-decoration:none;
-    box-shadow:0 3px 6px rgba(37,99,235,0.2);
+    box-shadow:0 3px 6px rgba(143,175,197,0.2);
     transition:all 0.2s;
   }
   .top-nav.light a:hover {
-    background:linear-gradient(145deg,#3B82F6,#2563EB);
+    background:linear-gradient(145deg,var(--blue1),var(--blue2));
     color:#fff;
   }
   .top-nav.light a.active {
-    background:linear-gradient(145deg,#3B82F6,#2563EB);
+    background:linear-gradient(145deg,var(--blue1),var(--blue2));
     color:#fff;
   }
 
@@ -111,7 +161,7 @@
   <nav class="top-nav light">
     <a href="../index.html">🏠 首頁</a>
     <a href="../DailyTask/">🎯 抽任務</a>
-    <a href="../ZhuyinPractice/">🔤 注音練習</a>
+    <a href="../ZhuyinPractice/">ㄅㄆㄇ 注音</a>
     <a href="../MathPractice/split-practice.html" class="active">➕ 數學分解</a>
   </nav>
 
@@ -139,107 +189,100 @@
   <div id="feedback"></div>
   <div id="stats">完成題數：0　｜　答錯次數：0</div>
 
-  <footer>Made with ❤️ by ZTing</footer>
+  <footer>© 2025 KidsLab · ZTing</footer>
 
-  <script>
-    let target=0, known=0, answer=0;
-    let correctCount=0, wrongCount=0;
+<script>
+  let target=0, known=0, answer=0;
+  let correctCount=0, wrongCount=0;
+  const problem=document.getElementById('problem');
+  const knownRow=document.getElementById('knownRow');
+  const pool=document.getElementById('pool');
+  const drop=document.getElementById('drop');
+  const feedback=document.getElementById('feedback');
+  const stats=document.getElementById('stats');
+  const nextBtn=document.getElementById('nextBtn');
+  const checkBtn=document.getElementById('checkBtn');
+  const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+  const updateStats=()=>{stats.textContent=`完成題數：${correctCount}　｜　答錯次數：${wrongCount}`;};
 
-    const problem=document.getElementById('problem');
-    const knownRow=document.getElementById('knownRow');
-    const pool=document.getElementById('pool');
-    const drop=document.getElementById('drop');
-    const feedback=document.getElementById('feedback');
-    const stats=document.getElementById('stats');
-    const nextBtn=document.getElementById('nextBtn');
-    const checkBtn=document.getElementById('checkBtn');
+  function newQuestion(){
+    feedback.textContent='';
+    drop.innerHTML=''; pool.innerHTML=''; knownRow.innerHTML='';
+    target=randInt(2,10);
+    const a=randInt(1,target-1);
+    known=Math.random()<0.5?a:target-a;
+    answer=target-known;
+    const leftBox=Math.random()<0.5;
+    problem.textContent = leftBox ? `${target} → ☐ + ${known}` : `${target} → ${known} + ☐`;
+    for(let i=0;i<known;i++) knownRow.appendChild(makeDot(false));
+    const poolCount=Math.max(10, answer);
+    for(let i=0;i<poolCount;i++) pool.appendChild(makeDot(true));
+  }
 
-    const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-    const updateStats=()=>{ stats.textContent=`完成題數：${correctCount}　｜　答錯次數：${wrongCount}`; };
+  function makeDot(draggable){
+    const d=document.createElement('div');
+    d.className='dot';
+    if(!draggable) return d;
+    let startX=0,startY=0,ghost=null;
+    const onPointerDown=(e)=>{
+      e.preventDefault();
+      const rect=d.getBoundingClientRect();
+      startX=e.clientX-rect.left; startY=e.clientY-rect.top;
+      ghost=d.cloneNode(true);
+      ghost.style.position='fixed';
+      ghost.style.left=rect.left+'px';
+      ghost.style.top=rect.top+'px';
+      ghost.style.pointerEvents='none';
+      ghost.classList.add('dragging');
+      document.body.appendChild(ghost);
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp,{once:true});
+    };
+    const onMove=(e)=>{
+      if(!ghost) return;
+      ghost.style.left=(e.clientX-startX)+'px';
+      ghost.style.top=(e.clientY-startY)+'px';
+    };
+    const onUp=(e)=>{
+      document.removeEventListener('pointermove', onMove);
+      if(!ghost) return;
+      const r=drop.getBoundingClientRect();
+      const x=e.clientX,y=e.clientY;
+      const inDrop=(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom);
+      ghost.remove(); ghost=null;
+      if(inDrop){ drop.appendChild(simpleDot()); }
+    };
+    d.addEventListener('pointerdown', onPointerDown);
+    return d;
+  }
 
-    function newQuestion(){
-      feedback.textContent='';
-      drop.innerHTML=''; pool.innerHTML=''; knownRow.innerHTML='';
+  function simpleDot(){
+    const d=document.createElement('div');
+    d.className='dot';
+    d.style.cursor='pointer';
+    d.title='點一下移回下方圓點區';
+    d.addEventListener('click',()=>{ pool.appendChild(makeDot(true)); d.remove(); });
+    return d;
+  }
 
-      target=randInt(2,10);
-      const a=randInt(1,target-1);
-      known=Math.random()<0.5?a:target-a;
-      answer=target-known;
-
-      const leftBox=Math.random()<0.5;
-      problem.textContent = leftBox ? `${target} → ☐ + ${known}` : `${target} → ${known} + ☐`;
-
-      for(let i=0;i<known;i++) knownRow.appendChild(makeDot(false));
-      const poolCount=Math.max(10, answer);
-      for(let i=0;i<poolCount;i++) pool.appendChild(makeDot(true));
+  function checkAnswer(){
+    const count=drop.children.length;
+    if(count===answer){
+      feedback.style.color='var(--ok)';
+      feedback.textContent='✅ 答對了！';
+      correctCount++; updateStats();
+      setTimeout(newQuestion,1200);
+    }else{
+      feedback.style.color='var(--no)';
+      feedback.textContent='❌ 再試一次';
+      wrongCount++; updateStats();
     }
+  }
 
-    function makeDot(draggable){
-      const d=document.createElement('div');
-      d.className='dot';
-      if(!draggable) return d;
-      let startX=0,startY=0,ghost=null;
-
-      const onPointerDown=(e)=>{
-        e.preventDefault();
-        const rect=d.getBoundingClientRect();
-        startX=e.clientX-rect.left; startY=e.clientY-rect.top;
-        ghost=d.cloneNode(true);
-        ghost.style.position='fixed';
-        ghost.style.left=rect.left+'px';
-        ghost.style.top=rect.top+'px';
-        ghost.style.pointerEvents='none';
-        ghost.classList.add('dragging');
-        document.body.appendChild(ghost);
-        document.addEventListener('pointermove', onMove);
-        document.addEventListener('pointerup', onUp,{once:true});
-      };
-      const onMove=(e)=>{
-        if(!ghost) return;
-        ghost.style.left=(e.clientX-startX)+'px';
-        ghost.style.top=(e.clientY-startY)+'px';
-      };
-      const onUp=(e)=>{
-        document.removeEventListener('pointermove', onMove);
-        if(!ghost) return;
-        const r=drop.getBoundingClientRect();
-        const x=e.clientX,y=e.clientY;
-        const inDrop=(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom);
-        ghost.remove(); ghost=null;
-        if(inDrop){ drop.appendChild(simpleDot()); }
-      };
-      d.addEventListener('pointerdown', onPointerDown);
-      return d;
-    }
-
-    function simpleDot(){
-      const d=document.createElement('div');
-      d.className='dot';
-      d.style.cursor='pointer';
-      d.title='點一下移回下方圓點區';
-      d.addEventListener('click',()=>{ pool.appendChild(makeDot(true)); d.remove(); });
-      return d;
-    }
-
-    function checkAnswer(){
-      const count=drop.children.length;
-      if(count===answer){
-        feedback.style.color='var(--ok)';
-        feedback.textContent='✅ 答對了！';
-        correctCount++; updateStats();
-        setTimeout(newQuestion,1200);
-      }else{
-        feedback.style.color='var(--no)';
-        feedback.textContent='❌ 再試一次';
-        wrongCount++; updateStats();
-      }
-    }
-
-    nextBtn.addEventListener('click', newQuestion);
-    checkBtn.addEventListener('click', checkAnswer);
-
-    updateStats();
-    newQuestion();
-  </script>
+  nextBtn.addEventListener('click', newQuestion);
+  checkBtn.addEventListener('click', checkAnswer);
+  updateStats();
+  newQuestion();
+</script>
 </body>
 </html>
