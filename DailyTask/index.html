@@ -82,25 +82,31 @@
 
 /* 暗版（Minecraft 背景頁使用） */
 .top-nav.dark a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255,255,255,0.1);
   color: #fff;
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 2px solid rgba(255,255,255,0.3);
   padding: 8px 14px;
   border-radius: 8px;
-  border-width: 2px;
+  font-size: 18px; /* 與亮版相同 */
+  line-height: 1;  /* 避免文字上下撐高 */
+  height: 44px;    /* ✅ 強制與亮版一致 */
+  box-sizing: border-box;
   text-decoration: none;
   transition: all 0.2s;
 }
+
 .top-nav.dark a:hover {
   background: rgba(255,255,255,0.25);
   color: #b0ffb0;
 }
-    
+
 .top-nav.dark a.active { 
   background: rgba(255,255,255,0.25); 
   color: #b0ffb0;
 }
-
 
   </style>
 </head>
