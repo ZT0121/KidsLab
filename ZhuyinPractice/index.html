@@ -72,17 +72,19 @@
 /* 選項按鈕區塊 */
 #buttons {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
-  margin-bottom: 20px;
+  max-width: 520px; /* 每排剛好容納 4 顆 */
+  margin: 0 auto 20px;
 }
+
 #buttons .btn {
-  min-width: 68px;
-  padding: 10px 14px;
-  font-size: 22px;
+  flex: 1 1 calc(25% - 12px); /* 每排 4 個 */
+  min-width: 100px;
+  text-align: center;
 }
+
 
 /* 回饋區 */
 #feedback {
