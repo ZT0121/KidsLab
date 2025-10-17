@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KidsLab｜學習實驗室</title>
+
+  <link rel="preload" as="font" href="./BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
+
+  <style>
+    @font-face{
+      font-family:"BpmfIansui";
+      src:url("./BpmfIansui-Regular.ttf") format("truetype");
+      font-display:swap;
+    }
+    :root{
+      --b1:#3B82F6; --b2:#2563EB; --ink:#1A365D; --title:#1E40AF;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0; padding:60px 20px; text-align:center;
+      font-family:"BpmfIansui","Noto Sans TC",sans-serif;
+      color:var(--ink);
+      background:linear-gradient(180deg,#E6F0FF 0%,#F7FAFF 100%);
+    }
+    h1{margin:0 0 8px; color:var(--title); text-shadow:1px 1px 2px rgba(0,0,0,.05);}
+    p.lead{margin:6px 0 28px; color:#1D4ED8; font-weight:700;}
+    .grid{
+      max-width:880px; margin:0 auto; display:grid; gap:16px;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    }
+    a.card{
+      display:block; padding:24px 18px; border-radius:16px; text-decoration:none;
+      color:#fff; background:linear-gradient(145deg,var(--b1),var(--b2));
+      box-shadow:0 8px 20px rgba(37,99,235,.25);
+      transition:transform .1s, box-shadow .2s, filter .2s;
+    }
+    a.card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 12px 24px rgba(37,99,235,.35);
+      filter:saturate(1.05);
+    }
+    .card .emoji{font-size:38px; display:block; margin-bottom:8px;}
+    .card .ttl{font-size:24px; font-weight:800;}
+    .card .sub{margin-top:6px; font-size:16px; opacity:.9;}
+    footer{margin-top:48px; font-size:14px; color:#1E3A8A;}
+  </style>
+</head>
+<body>
+  <h1>🧠 KidsLab</h1>
+  <p class="lead">線上學習實驗室</p>
+
+  <div class="grid">
+    <a class="card" href="./DailyTask/">
+      <span class="emoji">🎯</span>
+      <span class="ttl">抽任務</span>
+      <span class="sub">每天一個小挑戰</span>
+    </a>
+
+    <a class="card" href="./ZhuyinPractice/">
+      <span class="emoji">🔤</span>
+      <span class="ttl">注音練習</span>
+      <span class="sub">聽音拼讀練習</span>
+    </a>
+
+    <a class="card" href="./MathPractice/split-practice.html">
+      <span class="emoji">➕</span>
+      <span class="ttl">數學分解</span>
+      <span class="sub">動手拖曳小圓點</span>
+    </a>
+  </div>
+
+  <footer>© 2025 KidsLab · Created with ❤️ by ZTing</footer>
+</body>
+</html>
