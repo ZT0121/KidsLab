@@ -6,8 +6,13 @@
   src: url('./BpmfIansui-Regular.ttf') format('truetype');
   font-display: swap;
 }
+@font-face {
+  font-family: 'Iansui';
+  src: url('./Iansui-Regular.ttf') format('truetype');
+  font-display: swap;
+}
 
-/* 主題顏色變數（莫蘭迪藍灰） */
+/* 主題顏色（莫蘭迪藍灰） */
 :root {
   --b1: #A3BFD9;
   --b2: #7C9CBF;
@@ -26,9 +31,14 @@ body {
   margin: 0;
   padding: 20px;
   text-align: center;
-  font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;
+  font-family: 'BpmfIansui', 'Noto Sans TC', sans-serif;
   color: var(--ink);
   background: linear-gradient(180deg, #EEF3F7 0%, #F8FAFB 100%);
+}
+
+/* 注音強制字體 */
+.zhuyin-font {
+  font-family: 'BpmfIansui','Iansui','Noto Sans TC',sans-serif !important;
 }
 
 /* 標題 */
@@ -41,7 +51,7 @@ h2, h3 {
   color: var(--title);
 }
 
-/* 主要按鈕 */
+/* 按鈕 */
 .btn {
   font-family: 'BpmfIansui','Noto Sans TC',sans-serif !important;
   font-size: 22px;
@@ -106,15 +116,7 @@ footer {
   padding: 20px 0;
 }
 
-/* 響應式 */
-@media (max-width: 480px) {
-  .btn {
-    font-size: 18px;
-    padding: 8px 14px;
-  }
-}
-
-/* ========= KidsLab 首頁卡片樣式 ========= */
+/* ======= 首頁卡片 ======= */
 .grid {
   max-width: 880px;
   margin: 0 auto;
@@ -122,7 +124,6 @@ footer {
   gap: 16px;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
-
 a.card {
   position: relative;
   display: flex;
@@ -139,42 +140,17 @@ a.card {
   transition: transform .18s ease, box-shadow .2s ease, filter .2s ease;
   overflow: hidden;
 }
-
-a.card::after {
-  content: "";
-  position: absolute;
-  inset: auto -40% -60% -40%;
-  height: 120%;
-  background: radial-gradient(60% 60% at 50% 100%, rgba(255,255,255,.25), transparent 60%);
-  transform: translateY(10%);
-  transition: opacity .25s ease, transform .25s ease;
-  opacity: .2;
-  pointer-events: none;
-}
-
 a.card:hover {
   transform: translateY(-4px) scale(1.01);
   box-shadow: var(--glow);
   filter: saturate(1.05);
 }
-
-a.card:hover::after {
-  opacity: .35;
-  transform: translateY(0);
-}
-
-a.card:active { transform: translateY(-1px) scale(.99); }
-
 .emoji {
   font-size: 42px;
   margin-bottom: 10px;
   transition: transform .18s ease;
 }
-
-a.card:hover .emoji {
-  transform: translateY(-2px) scale(1.06);
-}
-
+a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
 .ttl {
   display: block;
   font-size: 24px;
@@ -183,7 +159,6 @@ a.card:hover .emoji {
   color: #2F3E46;
   text-shadow: 0 1px 2px rgba(255,255,255,0.4);
 }
-
 .sub {
   display: block;
   font-size: 16px;
@@ -192,60 +167,36 @@ a.card:hover .emoji {
   opacity: .95;
 }
 
-footer {
-  margin-top: 48px;
-  font-size: 14px;
-  color: #2F3E46;
-}
-
-/* ========= 修正數字分解練習樣式被覆蓋 ========= */
-.tray {
-  background: #F0F5FF;
-  border: 2px dashed #BFDBFE;
-  border-radius: 14px;
-  padding: 12px;
-  margin: 12px auto;
-  max-width: 620px;
-}
-
-.trayTitle {
-  font-size: 16px;
-  color: var(--title);
-  margin: 0 0 8px;
-}
-
-#drop, #pool {
-  min-height: 60px;
+/* ======= 注音練習頁：選項間距 ======= */
+#buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
   justify-content: center;
-  padding: 10px;
-  background: #fff;
-  border-radius: 14px;
+  gap: 12px;
+  margin-top: 10px;
+}
+#buttons .btn {
+  min-width: 70px;
+  padding: 10px 14px;
+  border-radius: 10px;
 }
 
-#drop {
-  border: 3px solid #93C5FD;
+/* ======= 拖曳圓點置中修正 ======= */
+.tray {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#pool, #drop {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.dot {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--b1);
-  box-shadow: 0 1px 0 rgba(0,0,0,.08);
-  cursor: grab;
-  transition: transform .12s ease, filter .12s ease;
-}
-
-.dot:active {
-  transform: scale(1.08);
-  filter: saturate(1.2);
-}
-
-.dragging {
-  opacity: .9;
-  transform: scale(1.06);
-  filter: saturate(1.1);
+/* 響應式 */
+@media (max-width: 480px) {
+  .btn {
+    font-size: 18px;
+    padding: 8px 14px;
+  }
 }
