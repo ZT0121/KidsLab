@@ -280,3 +280,10 @@ a.card:hover .emoji { transform: none; }
   transform: scale(1.06);
   filter: saturate(1.1);
 }
+/* ✅ 強制關掉卡片 hover 動畫 */
+a.card:hover,
+a.card:hover .emoji {
+  transform: none !important;
+  box-shadow: var(--glow-soft) !important;
+  filter: none !important;
+}
