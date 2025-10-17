@@ -26,7 +26,7 @@ body {
   margin: 0;
   padding: 20px;
   text-align: center;
-  font-family: 'BpmfIansui', 'Noto Sans TC', sans-serif;
+  font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;
   color: var(--ink);
   background: linear-gradient(180deg, #EEF3F7 0%, #F8FAFB 100%);
 }
@@ -198,3 +198,54 @@ footer {
   color: #2F3E46;
 }
 
+/* ========= 修正數字分解練習樣式被覆蓋 ========= */
+.tray {
+  background: #F0F5FF;
+  border: 2px dashed #BFDBFE;
+  border-radius: 14px;
+  padding: 12px;
+  margin: 12px auto;
+  max-width: 620px;
+}
+
+.trayTitle {
+  font-size: 16px;
+  color: var(--title);
+  margin: 0 0 8px;
+}
+
+#drop, #pool {
+  min-height: 60px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px;
+  background: #fff;
+  border-radius: 14px;
+}
+
+#drop {
+  border: 3px solid #93C5FD;
+}
+
+.dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--b1);
+  box-shadow: 0 1px 0 rgba(0,0,0,.08);
+  cursor: grab;
+  transition: transform .12s ease, filter .12s ease;
+}
+
+.dot:active {
+  transform: scale(1.08);
+  filter: saturate(1.2);
+}
+
+.dragging {
+  opacity: .9;
+  transform: scale(1.06);
+  filter: saturate(1.1);
+}
