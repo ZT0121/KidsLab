@@ -152,16 +152,19 @@
       <h2 style="margin:0 0 10px;font-size:22px;color:#1E3A8A;">挑戰結束 🎉</h2>
       <p id="summary" style="margin:8px 0;color:#1E40AF;line-height:1.6;white-space:pre-line;"></p>
 <div class="actions" style="
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:nowrap;          /* ✅ 不換行 */
-  gap:16px;                  /* ✅ 按鈕間距 */
-  margin-top:18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 ">
-  <button class="btn" style="white-space:nowrap;" onclick="restartRound()">再挑戰一次</button>
-  <button class="btn btn-ghost" style="white-space:nowrap;" onclick="(document.getElementById('overlay').style.display='none', isChallenge=false, setFeedback('回到自由練習','ok'), updateProgressText())">返回自由練習</button>
+  <button class="btn" style="white-space: nowrap; min-width: 130px;" onclick="restartRound()">再挑戰一次</button>
+  <button class="btn btn-ghost" style="white-space: nowrap; min-width: 130px;" onclick="(document.getElementById('overlay').style.display='none', isChallenge=false, setFeedback('回到自由練習','ok'), updateProgressText())">返回自由練習</button>
 </div>
+
 
     </div>
   </div>
