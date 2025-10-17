@@ -162,6 +162,11 @@ body {
     max-width: 95%;
   }
 }
+
+/* ✅ 避免選項被底部固定列遮住 */
+#buttons {
+  margin-bottom: calc(120px + env(safe-area-inset-bottom));
+}
 </style>
 </head>
 
