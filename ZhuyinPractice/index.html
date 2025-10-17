@@ -109,11 +109,21 @@ body { padding-bottom: 90px; }
 
 /* ===== 浮出提示框（保留） ===== */
 .result-popup {
-  position: fixed; top: 50%; left: 50%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%) scale(0.8);
-  padding: 20px 36px; border-radius: 12px; font-size: 36px; font-weight: bold;
-  color: #fff; text-align: center; opacity: 0; z-index: 999;
-  transition: all 0.3s ease; pointer-events: none;
+  padding: 20px 36px;
+  border-radius: 12px;
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  opacity: 0;
+  z-index: 999;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  font-family: 'BpmfIansui', 'Iansui', 'Noto Sans TC', sans-serif; /* ✅ 新增這行 */
 }
 .result-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 .result-popup.correct { background: rgba(76,175,80,.92); box-shadow: 0 0 20px rgba(76,175,80,.5); }
