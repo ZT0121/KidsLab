@@ -96,6 +96,24 @@
       color: #6b7280;
     }
   </style>
+  <style>
+/* ✅ 修正注音練習卡片高度與對齊 */
+.zhuyin-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 64px;           /* 與其他 emoji 高度一致 */
+  margin-bottom: 12px;    /* 與現有卡片一致的下方間距 */
+}
+
+.zhuyin-hero span {
+  display: inline-block;
+  font-size: 48px;
+  line-height: 1;
+  transform: translateY(3px); /* 微調居中 */
+}
+</style>
 </head>
 
 <body>
