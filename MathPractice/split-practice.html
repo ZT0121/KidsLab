@@ -6,15 +6,16 @@
 <title>數字分解</title>
 
 <!-- 同層放置字體檔：BpmfIansui-Regular.ttf -->
-<link rel="preload" as="font" href="BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
+<link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
 
 <style>
   /* 字體設定 */
-  @font-face {
-    font-family: 'BpmfIansui';
-    src: url('BpmfIansui-Regular.ttf') format('truetype');
-    font-display: swap;
-  }
+@font-face {
+  font-family: 'BpmfIansui';
+  src: url('../BpmfIansui-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
 
   :root{
     --blue1:#3B82F6; /* 天藍 */
@@ -25,6 +26,9 @@
     --no:#DC2626;    /* 失敗 */
   }
 
+  body, h1, h2, h3, button, #problem, #feedback, #stats, nav, a, footer {
+    font-family: 'BpmfIansui', 'Noto Sans TC', sans-serif !important;
+  
   /* 藍色主題背景與全域字體 */
   body{
     font-family:'BpmfIansui',"Noto Sans TC",sans-serif;
