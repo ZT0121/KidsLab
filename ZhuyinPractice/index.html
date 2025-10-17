@@ -104,6 +104,8 @@
 
   <h1>ㄅㄆㄇ 注音練習</h1>
 
+  <div id="progress">自由練習</div> 
+
   <div id="toolbar">
     <button class="btn" onclick="submitAnswer()">送出</button>
     <button class="btn" onclick="nextWord()">下一題</button>
@@ -111,11 +113,11 @@
     <button class="btn" onclick="startChallenge()">🚀 挑戰模式</button>
   </div>
 
-  <div id="progress">自由練習</div>
+  <button id="playBtn" onclick="playTTS()">🔊 再聽一次</button>
 
   <div id="word">
     <span id="wordText">詞語</span>
-    <button id="playBtn" onclick="playTTS()">🔊 再聽一次</button>
+  
   </div>
 
   <div id="selected"></div>
