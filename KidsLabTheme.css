@@ -167,6 +167,26 @@ a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
   opacity: .95;
 }
 
+/* ✅ 修正注音卡片垂直高度與對齊一致 */
+.emoji.zhuyin-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  height: 64px;
+}
+
+.emoji.zhuyin-hero span {
+  font-family: 'BpmfIansui','Noto Sans TC',sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 1;
+  transform: translateY(2px);
+  color: #2F3E46;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
 /* ======= 注音練習頁：選項間距 ======= */
 #buttons {
   display: flex;
@@ -232,7 +252,7 @@ a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
   border-radius: 12px;
   border: 2px dashed #A3BFD9;
   background: transparent;
-  width: 100%;               /* 改這裡 */
+  width: 100%;
   min-height: 68px;
   transition: border-color 0.2s ease;
 }
@@ -251,33 +271,12 @@ a.card:hover .emoji { transform: translateY(-2px) scale(1.06); }
   transition: transform 0.1s ease, filter 0.1s ease;
   cursor: grab;
 }
-
 .dot:hover {
   transform: scale(1.08);
   filter: brightness(1.1);
 }
-
 .dragging {
   opacity: 0.9;
   transform: scale(1.06);
   filter: saturate(1.1);
 }
-
-.emoji.zhuyin-hero {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px; /* 字距可微調 */
-  width: 100%;
-  transform: translateX(5px);
-
-}
-
-.emoji.zhuyin-hero span {
-  font-family: 'BpmfIansui','Noto Sans TC',sans-serif;
-  font-weight: 700;
-  font-size: 42px;
-  color: #2F3E46;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-}
-
