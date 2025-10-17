@@ -30,7 +30,9 @@ KidsLab/
 └── /MathPractice/            # 數學練習區
     ├── split-practice.html   # 數字分解練習
     └── ...
-```bash
+
+---
+
 🎯 每日任務（DailyTask）
 功能說明
 抽任務：從任務清單隨機選出今日任務
