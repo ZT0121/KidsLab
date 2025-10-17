@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hunter 的每日任務</title>
+  <style>
+    @font-face {
+      font-family: 'Cubic11';
+      src: url('./Cubic_11.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body{
+      margin:0; font-family:"Cubic11", monospace, sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      color:#fff; text-align:center; padding:20px;
+    }
+    h1{ font-size:1.8rem; text-shadow:2px 2px #333; }
+    img.avatar{
+      width:120px; image-rendering:pixelated; border:4px solid #000;
+      margin:10px; border-radius:4px;
+    }
+    .card{ background:rgba(60,60,60,0.85); border:4px solid #000; padding:16px; margin:12px auto; max-width:480px; border-radius:8px; }
+    .task{ font-size:1.3rem; margin:12px 0; padding:10px; background:rgba(34,34,34,0.9); border:2px solid #555; border-radius:4px; }
+    .done{ color:#0f0; font-size:1rem; margin-top:6px; animation: glow 1s infinite alternate; }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #0f0; }
+      to { text-shadow: 0 0 15px #0f0; }
+    }
+    @keyframes floatUp {
+      from { opacity: 1; transform: translate(-50%, -50%); }
+      to { opacity: 0; transform: translate(-50%, -150%); }
+    }
+    button{
+      font-family:"Cubic11", monospace, sans-serif;
+      padding:10px 16px; margin:6px; border:3px solid #000; background:#8b5;
+      color:#fff; cursor:pointer; text-transform:uppercase;
+    }
+    button:hover{ background:#7a4; }
+    button.small{
+      font-size:0.7rem; padding:4px 8px; margin:4px;
+      background:#666; border:2px solid #444;
+    }
+    button.small:hover{ background:#555; }
+    .xp-container{
+      display:flex; align-items:center; justify-content:center; gap:12px; margin-top:10px;
+    }
+    .xp-bar{
+      flex:1; max-width:300px;
+      background:#333; border:3px solid #000; height:24px;
+      position:relative;
+    }
+    .xp-fill{
+      background:#4caf50; height:100%; width:0%; transition:width .4s;
+    }
+    .xp-text{ position:absolute; top:0; left:50%; transform:translateX(-50%); font-size:0.9rem; color:#fff; }
+    ul{ text-align:left; margin:10px auto; max-width:400px; }
+    li{ margin:4px 0; }
+  </style>
+</head>
+<body>
+  <h1>Hunter 的每日任務</h1>
+  <img src="avatar.png" alt="Hunter Avatar" class="avatar">
+
+  <div class="card">
+    <div>今天的任務</div>
+    <div class="task" id="todayTask">尚未指定</div>
+    <div id="doneMark" class="done"></div>
+    <button id="completeBtn">完成任務 ✔</button>
+  </div>
+
+  <div class="card">
+    <div>下一個上學日的任務</div>
+    <div class="task" id="nextTask">尚未抽籤</div>
+    <button id="drawBtn">抽任務</button>
+    <button id="redrawBtn">重抽</button>
+    <button id="clearBtn">清除</button>
+  </div>
+
+  <div class="card">
+    <div>積分系統</div>
+    <div class="xp-container">
+      <img src="avatar.png" alt="Hunter Avatar" class="avatar" style="width:60px; margin:0;">
+      <div class="xp-bar">
+        <div class="xp-fill" id="xpFill"></div>
+        <div class="xp-text" id="xpText">0 / 5</div>
+      </div>
+    </div>
+    <div id="rewardMsg" style="margin-top:10px; color:#ff0; font-weight:bold"></div>
+    <button id="redeemBtn" style="display:none; background:#d85">🎟️兌換 Minecraft 30 分鐘</button>
+    <button id="clearPointsBtn" class="small">⚠️清除積分</button>
+    <button id="parentAddPointBtn" class="small" style="background:#b22222; border:2px solid #700">🔒 家長加分</button>
+  </div>
+
+  <div class="card">
+    <div>任務歷史紀錄（最近 10 筆）</div>
+    <ul id="historyList"></ul>
+    <button id="clearHistoryBtn" class="small">清除歷史</button>
+  </div>
+
+  <div class="card">
+  <div>測試工具（僅大人使用）</div>
+  <button id="forceMoveBtn" class="small" style="background:#b22222; border:2px solid #700">🔒 強制搬移任務到今天</button>
+</div>
+
+  <script src="tasks.js"></script>
+  <script src="main.js"></script>
+  <script>
+    // 家長加分功能
+    document.getElementById('parentAddPointBtn').onclick=()=>{
+      if(!passwordCheck()) return;
+      let pts = loadPoints();
+      pts++;
+      savePoints(pts);
+      alert("已強制加 1 分！");
+      render();
+    };
+  </script>
+</body>
+</html>
