@@ -69,21 +69,24 @@
   min-height: 32px;
 }
 
-/* 選項按鈕區塊 */
+/* 選項：每排固定 4 個 */
 #buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* ← 每列 4 格 */
   gap: 12px;
-  max-width: 520px; /* 每排剛好容納 4 顆 */
+  max-width: 720px;      /* 視需要可調 */
   margin: 0 auto 20px;
 }
 
 #buttons .btn {
-  flex: 1 1 calc(25% - 12px); /* 每排 4 個 */
-  min-width: 100px;
-  text-align: center;
+  width: 100%;
+  display: flex;         /* 讓字置中 */
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;   /* 不自動換行 */
+  min-height: 48px;      /* 視覺一致 */
 }
+
 
 
 /* 回饋區 */
