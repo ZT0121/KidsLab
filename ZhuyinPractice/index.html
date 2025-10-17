@@ -5,290 +5,70 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>注音練習｜KidsLab</title>
 
+<link rel="stylesheet" href="../KidsLabTheme.css">
 <link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
 <link rel="preload" as="font" href="../Iansui-Regular.ttf" type="font/ttf" crossorigin>
-
-<style>
-  @font-face {
-    font-family: 'BpmfIansui';
-    src: url('../BpmfIansui-Regular.ttf') format('truetype');
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Iansui';
-    src: url('../Iansui-Regular.ttf') format('truetype');
-    font-display: swap;
-  }
-
-  :root {
-    --blue1:#AFC2D5;  /* 淺莫蘭迪藍 */
-    --blue2:#8FAFC5;  /* 深莫蘭迪藍 */
-    --ink:#2E3A46;    /* 文字深灰藍 */
-    --title:#4A5F73;  /* 標題灰藍 */
-    --ok:#5C897C;
-    --no:#C55E5E;
-  }
-
-  body {
-    font-family:'BpmfIansui',"Noto Sans TC",sans-serif;
-    background:linear-gradient(180deg,#F4F6F8 0%,#E8EDF1 100%);
-    text-align:center;
-    padding:20px;
-    color:var(--ink);
-  }
-
-  h1 { color:var(--title); margin:0 0 10px; text-shadow:1px 1px 2px rgba(0,0,0,0.05);}
-  #wordText {
-    font-family:'Iansui',"Noto Sans TC",sans-serif !important;
-    font-size:72px;
-    color:var(--title);
-    text-shadow:1px 1px 2px rgba(0,0,0,0.15);
-  }
-
-  #toolbar {
-    margin:10px 0 16px; display:flex; gap:10px;
-    justify-content:center; flex-wrap:wrap;
-  }
-  #word { margin:18px 0; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;}
-  #progress { font-size:18px; margin:6px 0; color:var(--title);}
-  #selected { font-size:32px; margin:14px 0; color:var(--blue2); min-height:38px;}
-  #buttons { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:10px 0 18px;}
-
-  /* ==== 按鈕樣式（莫蘭迪藍） ==== */
-  .btn {
-    font-family:'BpmfIansui','Noto Sans TC',sans-serif !important;
-    font-size:22px;
-    padding:10px 16px;
-    border-radius:12px;
-    border:none;
-    background:linear-gradient(145deg,#D7E0E8,#B7C8D8);
-    color:#2F3E46;
-    text-shadow:0 1px 2px rgba(255,255,255,0.5);
-    cursor:pointer;
-    box-shadow:0 4px 10px rgba(150,170,190,0.25);
-    transition:transform 0.1s, box-shadow 0.2s;
-  }
-  .btn:hover {
-    transform:translateY(-2px);
-    box-shadow:0 6px 14px rgba(150,170,190,0.35);
-    filter:brightness(1.03);
-  }
-
-  .btn-ghost {
-    background:#fff;
-    border:2px solid var(--blue2);
-    color:var(--title);
-    box-shadow:none;
-  }
-  .btn-ghost:hover { background:#E8EDF1; }
-
-  #feedback { font-size:26px; margin-top:8px; min-height:32px;}
-  .ok { color:var(--ok); } .err { color:var(--no); }
-
-  /* ==== KidsLab 導覽列（莫蘭迪版） ==== */
-  .top-nav {
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
-    font-family:'BpmfIansui','Noto Sans TC',sans-serif;
-  }
-
-  .top-nav.light a {
-    background:#fff;
-    color:var(--title);
-    border:2px solid var(--blue2);
-    padding:8px 14px;
-    border-radius:8px;
-    text-decoration:none;
-    box-shadow:0 3px 6px rgba(143,175,197,0.2);
-    transition:all 0.2s;
-  }
-  .top-nav.light a:hover {
-    background:linear-gradient(145deg,var(--blue1),var(--blue2));
-    color:#fff;
-  }
-  .top-nav.light a.active {
-    background:linear-gradient(145deg,var(--blue1),var(--blue2));
-    color:#fff;
-  }
-
-  /* 挑戰模式彈窗 */
-  #overlay {
-    position:fixed; inset:0; background:rgba(0,0,0,.4);
-    display:none; align-items:center; justify-content:center;
-  }
-  #panel {
-    background:#fff;
-    border-radius:16px;
-    max-width:360px;
-    width:90%;
-    padding:22px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
-    text-align:left;
-  }
-  #panel h2 { margin:0 0 10px; font-size:22px; color:var(--title); }
-  #panel p { margin:8px 0; color:var(--ink); line-height:1.6; white-space:pre-line; }
-  #panel .actions {
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    margin-top:18px;
-  }
-  #panel button {
-    font-family:'BpmfIansui','Noto Sans TC',sans-serif !important;
-    font-size:20px;
-    padding:12px 20px;
-    border-radius:12px;
-    border:none;
-    background:linear-gradient(145deg,#D7E0E8,#B7C8D8);
-    color:#2F3E46;
-    text-shadow:0 1px 2px rgba(255,255,255,0.5);
-    cursor:pointer;
-    box-shadow:0 4px 10px rgba(150,170,190,0.25);
-    transition:transform 0.1s, box-shadow 0.2s;
-    min-width:150px;
-  }
-  #panel button:hover {
-    transform:translateY(-3px);
-    box-shadow:0 8px 16px rgba(150,170,190,0.35);
-    filter:brightness(1.03);
-  }
-</style>
 </head>
 
 <body>
-<nav class="top-nav light">
-  <a href="../index.html">🏠 首頁</a>
-  <a href="../DailyTask/">🎯 每日任務</a>
-  <a href="../ZhuyinPractice/" class="active">ㄅㄆㄇ 注音</a>
-  <a href="../MathPractice/split-practice.html">➕ 數字分解練習</a>
-</nav>
+  <nav class="top-nav light">
+    <a href="../index.html">🏠 首頁</a>
+    <a href="../DailyTask/">🎯 每日任務</a>
+    <a href="../ZhuyinPractice/" class="active">ㄅㄆㄇ 注音練習</a>
+    <a href="../MathPractice/split-practice.html">➕ 數字分解練習</a>
+  </nav>
 
-<h1>注音練習</h1>
+  <h1>ㄅㄆㄇ 注音練習</h1>
 
-<div id="toolbar">
-  <button class="btn" onclick="submitAnswer()">送出</button>
-  <button class="btn" onclick="nextWord()">下一題</button>
-  <button class="btn btn-ghost" onclick="clearSelected()">清除</button>
-  <button class="btn" onclick="startChallenge()">🚀 挑戰模式</button>
-</div>
+  <div id="toolbar">
+    <button class="btn" onclick="submitAnswer()">送出</button>
+    <button class="btn" onclick="nextWord()">下一題</button>
+    <button class="btn btn-ghost" onclick="clearSelected()">清除</button>
+    <button class="btn" onclick="startChallenge()">🚀 挑戰模式</button>
+  </div>
 
-<div id="progress">自由練習</div>
+  <div id="progress">自由練習</div>
 
-<div id="word">
-  <span id="wordText">詞語</span>
-  <button id="playBtn" class="btn btn-ghost" onclick="playTTS()">🔊 再聽一次</button>
-</div>
+  <div id="word">
+    <span id="wordText" style="font-family:'Iansui','Noto Sans TC';font-size:72px;text-shadow:1px 1px 2px rgba(0,0,0,0.15);">詞語</span>
+    <button id="playBtn" class="btn btn-ghost" onclick="playTTS()">🔊 再聽一次</button>
+  </div>
 
-<div id="selected"></div>
-<div id="buttons"></div>
-<div id="feedback"></div>
+  <div id="selected"></div>
+  <div id="buttons"></div>
+  <div id="feedback"></div>
 
-<script src="words.js"></script>
-<script src="zhuyin-all.js"></script>
-<script>
-let current=-1, selected=[], isChallenge=false;
-const ROUND_TOTAL=10;
-let roundCount=0, roundCorrect=0;
-function getDistractors(correct){
-  const need=Math.max(3,correct.length*2);
-  const distractors=[];
-  while(distractors.length<need){
-    const c=allSyllables[Math.floor(Math.random()*allSyllables.length)];
-    if(!correct.includes(c)&&!distractors.includes(c)) distractors.push(c);
-  }
-  return distractors;
-}
-function nextWord(){
-  selected=[];
-  let idx; do{ idx=Math.floor(Math.random()*words.length);}while(idx===current);
-  current=idx;
-  const w=words[current];
-  document.getElementById("wordText").textContent=w.char;
-  document.getElementById("selected").textContent="";
-  document.getElementById("feedback").textContent="";
-  updateProgressText(); renderOptions(); playTTS();
-}
-function updateProgressText(){
-  if(isChallenge){
-    const shown=Math.min(roundCount+1,ROUND_TOTAL);
-    document.getElementById("progress").textContent=`挑戰模式：第 ${shown} / ${ROUND_TOTAL} 題`;
-  } else document.getElementById("progress").textContent="自由練習";
-}
-function renderOptions(){
-  const btnDiv=document.getElementById("buttons");
-  btnDiv.innerHTML="";
-  const correct=words[current].zhuyin;
-  let options=[...correct,...getDistractors(correct)];
-  options.sort(()=>Math.random()-0.5);
-  options.forEach(syl=>{
-    const btn=document.createElement("button");
-    btn.textContent=syl;
-    btn.className="btn";
-    btn.onclick=()=>{selected.push(syl); document.getElementById("selected").textContent=selected.join(" ");};
-    btnDiv.appendChild(btn);
-  });
-}
-function submitAnswer(){
-  if(!words[current])return;
-  if(selected.length===0){setFeedback("先選注音再送出喔～","hint"); return;}
-  const ans=selected.join(" ");
-  const correct=words[current].zhuyin.join(" ");
-  if(isChallenge){
-    roundCount++;
-    if(ans===correct){roundCorrect++; setFeedback("✅ 正確！","ok"); setTimeout(nextWord,3000);}
-    else{setFeedback(`❌ 錯誤，正確答案：${correct}`,"err"); setTimeout(nextWord,3000);}
-    if(roundCount>=ROUND_TOTAL)setTimeout(showChallengeSummary,600);
-  }else{
-    if(ans===correct){setFeedback("✅ 正確！","ok"); setTimeout(nextWord,3000);}
-    else setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");
-  }
-}
-function startChallenge(){
-  isChallenge=true; roundCount=0; roundCorrect=0;
-  setFeedback("🚀 挑戰開始！共 10 題","ok"); nextWord();
-}
-function showChallengeSummary(){
-  const rate=Math.round((roundCorrect/ROUND_TOTAL)*100);
-  const msg=`本輪成績：${roundCorrect} / ${ROUND_TOTAL}\\n正確率：${rate}%\\n做得好！再挑戰一次吧～`;
-  document.getElementById("summary").textContent=msg;
-  document.getElementById("overlay").style.display="flex";
-}
-function restartRound(){
-  isChallenge=true; roundCount=0; roundCorrect=0;
-  document.getElementById("overlay").style.display="none"; nextWord();
-}
-function setFeedback(t,cls){
-  const e=document.getElementById("feedback");
-  e.textContent=t; e.className=cls;
-}
-function clearSelected(){
-  selected=[]; document.getElementById("selected").textContent="";
-  setFeedback("","");
-}
-function playTTS(){
-  const w=words[current]; if(!w)return;
-  if("speechSynthesis" in window){
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(w.char);
-    u.lang="zh-TW"; speechSynthesis.speak(u);
-  }
-}
-nextWord();
-</script>
+  <footer>© 2025 KidsLab · Created with ❤️ by ZTing</footer>
 
-<div id="overlay">
-  <div id="panel">
-    <h2>挑戰結束 🎉</h2>
-    <p id="summary"></p>
-    <div class="actions">
-      <button onclick="restartRound()">再挑戰一次</button>
-      <button onclick="(document.getElementById('overlay').style.display='none', isChallenge=false, setFeedback('回到自由練習','ok'), updateProgressText())">返回自由練習</button>
+  <script src="words.js"></script>
+  <script src="zhuyin-all.js"></script>
+  <script>
+    // 保留原功能邏輯
+    let current=-1,selected=[],isChallenge=false;
+    const ROUND_TOTAL=10; let roundCount=0,roundCorrect=0;
+    function getDistractors(correct){const need=Math.max(3,correct.length*2);const d=[];while(d.length<need){const c=allSyllables[Math.floor(Math.random()*allSyllables.length)];if(!correct.includes(c)&&!d.includes(c))d.push(c);}return d;}
+    function nextWord(){selected=[];let idx;do{idx=Math.floor(Math.random()*words.length);}while(idx===current);current=idx;const w=words[current];document.getElementById("wordText").textContent=w.char;document.getElementById("selected").textContent="";document.getElementById("feedback").textContent="";updateProgressText();renderOptions();playTTS();}
+    function updateProgressText(){document.getElementById("progress").textContent=isChallenge?`挑戰模式：第 ${Math.min(roundCount+1,ROUND_TOTAL)} / ${ROUND_TOTAL} 題`:"自由練習";}
+    function renderOptions(){const btnDiv=document.getElementById("buttons");btnDiv.innerHTML="";const correct=words[current].zhuyin;let options=[...correct,...getDistractors(correct)];options.sort(()=>Math.random()-.5);options.forEach(syl=>{const btn=document.createElement("button");btn.textContent=syl;btn.className="btn";btn.onclick=()=>{selected.push(syl);document.getElementById("selected").textContent=selected.join(" ");};btnDiv.appendChild(btn);});}
+    function submitAnswer(){if(!words[current])return;if(selected.length===0){setFeedback("先選注音再送出喔～","hint");return;}const ans=selected.join(" ");const correct=words[current].zhuyin.join(" ");if(isChallenge){roundCount++;if(ans===correct){roundCorrect++;setFeedback("✅ 正確！","ok");setTimeout(nextWord,3000);}else{setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");setTimeout(nextWord,3000);}if(roundCount>=ROUND_TOTAL)setTimeout(showChallengeSummary,600);}else{if(ans===correct){setFeedback("✅ 正確！","ok");setTimeout(nextWord,3000);}else setFeedback(`❌ 錯誤，正確答案：${correct}`,"err");}}
+    function startChallenge(){isChallenge=true;roundCount=0;roundCorrect=0;setFeedback("🚀 挑戰開始！共 10 題","ok");nextWord();}
+    function showChallengeSummary(){const rate=Math.round((roundCorrect/ROUND_TOTAL)*100);const msg=`本輪成績：${roundCorrect} / ${ROUND_TOTAL}\n正確率：${rate}%\n做得好！再挑戰一次吧～`;document.getElementById("summary").textContent=msg;document.getElementById("overlay").style.display="flex";}
+    function restartRound(){isChallenge=true;roundCount=0;roundCorrect=0;document.getElementById("overlay").style.display="none";nextWord();}
+    function setFeedback(t,cls){const e=document.getElementById("feedback");e.textContent=t;e.className=cls;}
+    function clearSelected(){selected=[];document.getElementById("selected").textContent="";setFeedback("","");}
+    function playTTS(){const w=words[current];if(!w)return;if("speechSynthesis"in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.char);u.lang="zh-TW";speechSynthesis.speak(u);}}
+    nextWord();
+  </script>
+
+  <div id="overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;">
+    <div id="panel" style="background:#fff;border-radius:16px;max-width:360px;width:90%;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.25);text-align:left;">
+      <h2 style="margin:0 0 10px;font-size:22px;color:#1E3A8A;">挑戰結束 🎉</h2>
+      <p id="summary" style="margin:8px 0;color:#1E40AF;line-height:1.6;white-space:pre-line;"></p>
+      <div class="actions" style="display:flex;gap:20px;justify-content:center;margin-top:18px;">
+        <button class="btn" onclick="restartRound()">再挑戰一次</button>
+        <button class="btn btn-ghost" onclick="(document.getElementById('overlay').style.display='none', isChallenge=false, setFeedback('回到自由練習','ok'), updateProgressText())">返回自由練習</button>
+      </div>
     </div>
   </div>
-</div>
-
 </body>
 </html>
