@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>順序與位置練習｜KidsLab</title>
+
+<link rel="stylesheet" href="../KidsLabTheme.css">
+<link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
+<link rel="preload" as="font" href="../Iansui-Regular.ttf" type="font/ttf" crossorigin>
+<style>
+:root{ --tile-size: 64px; }
+body{ margin:0; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif; }
+.container{ max-width:920px; margin:0 auto; padding:16px; }
+
+#toolbar{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  padding:12px; border:1px solid var(--b2,#dbeafe); border-radius:12px;
+  background:var(--b1,#f8fafc);
+}
+#toolbar label{ font-size:14px; }
+
+.btn{ cursor:pointer; border:1px solid var(--b3,#bfdbfe); background:#fff;
+  padding:10px 14px; border-radius:10px; font-size:16px; }
+.btn:active{ transform:translateY(1px); }
+
+#prompt{ margin:16px 0 6px; font-size:20px; font-weight:700; }
+
+.row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:center; padding:14px; border:2px dashed var(--b2,#dbeafe); border-radius:14px; min-height:calc(var(--tile-size) + 28px); background:transparent; }
+
+.tile{ width:var(--tile-size); height:var(--tile-size); border-radius:14px; border:2px solid rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:34px; user-select:none; -webkit-tap-highlight-color:transparent; transition:transform .08s ease, box-shadow .15s ease; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif; background:#fff; }
+.tile:active{ transform:scale(.97); }
+
+.mark-correct{ outline:3px solid #22c55e; box-shadow:0 0 0 6px rgba(34,197,94,.15) inset; }
+.mark-wrong{ outline:3px solid #ef4444; box-shadow:0 0 0 6px rgba(239,68,68,.15) inset; }
+
+#status{ display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-top:10px; font-size:14px; opacity:.85; }
+
+.toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .2s; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif; }
+.toast.show{ opacity:1; }
+
+.small{ font-size:12px; opacity:.75; }
+
+@media (min-width:480px){ :root{ --tile-size:72px; } #prompt{ font-size:22px; } }
+@media (min-width:768px){ :root{ --tile-size:80px; } #prompt{ font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>順序與位置練習</h1>
+
+  <div id="toolbar">
+    <label>項目數：
+      <select id="count">
+        <option>5</option><option selected>6</option><option>7</option><option>8</option>
+        <option>9</option><option>10</option><option>11</option><option>12</option>
+      </select>
+    </label>
+
+    <button class="btn" id="btnNew">下一題</button>
+    <button class="btn" id="btnReset">重置統計</button>
+    <span class="small">答對自動出題</span>
+  </div>
+
+  <div id="prompt"></div>
+  <div class="row" id="row"></div>
+
+  <div id="status">
+    <div>總題數：<span id="qTotal">0</span></div>
+    <div>答對：<span id="qRight">0</span></div>
+    <div>連續：<span id="qStreak">0</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">答對</div>
+
+<script>
+(function(){
+  const row = document.getElementById('row');
+  const promptEl = document.getElementById('prompt');
+  const countSel = document.getElementById('count');
+  const btnNew = document.getElementById('btnNew');
+  const btnReset = document.getElementById('btnReset');
+  const toast = document.getElementById('toast');
+  const qTotalEl = document.getElementById('qTotal');
+  const qRightEl = document.getElementById('qRight');
+  const qStreakEl = document.getElementById('qStreak');
+
+  const EMOJIS = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🦁','🐷','🐸','🐵','🐯','🐮','🐤','🐙','🐠'];
+
+  let state = { items:[], answerIndex:0, from:'left', askIdx:1, lock:false, stats:{total:0,right:0,streak:0} };
+  let nextTimer = null;
+
+  function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+  function sample(arr,n){ const a=[...arr]; const out=[]; while(out.length<n){ const i=rnd(0,a.length-1); out.push(a.splice(i,1)[0]); } return out; }
+
+  function speak(text){ try{ if(!('speechSynthesis' in window)) return; const u=new SpeechSynthesisUtterance(text); u.lang='zh-TW'; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);}catch(e){} }
+
+  function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>toast.classList.remove('show'),1200); }
+
+  function buildItems(n){ const ems=sample(EMOJIS,n); return ems.map((e,i)=>({value:e,index:i})); }
+
+  function render(){ row.innerHTML=''; state.items.forEach((it,i)=>{ const d=document.createElement('div'); d.className='tile'; d.dataset.i=i; d.textContent=it.value; d.addEventListener('click',onClickTile); row.appendChild(d); }); }
+
+  function ordinal(n){ return n; }
+  function fromText(side){ return side==='left'?'左邊':'右邊'; }
+
+  function makeQuestion(){ state.lock=false; clearTimeout(nextTimer); const n=parseInt(countSel.value,10); state.items=buildItems(n); state.from=Math.random()<0.5?'left':'right'; state.askIdx=rnd(1,n); state.answerIndex=state.from==='left'?(state.askIdx-1):(n-state.askIdx); promptEl.textContent=`請點選「從${fromText(state.from)}數來第 ${ordinal(state.askIdx)} 個」。`; speak(`從${fromText(state.from)}數來第${state.askIdx}個`); render(); }
+
+  function updateStats(correct){ state.stats.total++; if(correct){ state.stats.right++; state.stats.streak++; } else { state.stats.streak=0; } qTotalEl.textContent=state.stats.total; qRightEl.textContent=state.stats.right; qStreakEl.textContent=state.stats.streak; }
+
+  function mark(index,cls){ const el=row.querySelector(`.tile[data-i="${index}"]`); if(el){ el.classList.add(cls); setTimeout(()=>el.classList.remove(cls),600); } }
+
+  function revealCorrect(){ mark(state.answerIndex,'mark-correct'); }
+
+  function onClickTile(e){ if(state.lock)return; const i=parseInt(e.currentTarget.dataset.i,10); const correct=(i===state.answerIndex); state.lock=true; if(correct){ mark(i,'mark-correct'); updateStats(true); showToast('答對'); nextTimer=setTimeout(makeQuestion,1100); } else { mark(i,'mark-wrong'); revealCorrect(); updateStats(false); showToast('再試一次'); setTimeout(()=>{ state.lock=false; },400); } }
+
+  btnNew.addEventListener('click',()=>makeQuestion());
+  btnReset.addEventListener('click',()=>{ state.stats={total:0,right:0,streak:0}; qTotalEl.textContent=qRightEl.textContent=qStreakEl.textContent='0'; });
+  countSel.addEventListener('change',makeQuestion);
+
+  makeQuestion();
+})();
+</script>
+</body>
+</html>
