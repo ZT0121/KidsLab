@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="../KidsLabTheme-vFinal.css">
 <link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
+<link rel="preload" as="font" href="../Iansui-Regular.ttf" type="font/ttf" crossorigin>
 
 <style>
 :root{ --tile-size: 64px; }
@@ -118,7 +119,7 @@ body{ margin:0; font-family:'BpmfIansui','Iansui','Noto Sans TC',sans-serif; }
 
   function revealCorrect(){ mark(state.answerIndex,'mark-correct'); }
 
-  function onClickTile(e){ if(state.lock)return; const i=parseInt(e.currentTarget.dataset.i,10); const correct=(i===state.answerIndex); state.lock=true; if(correct){ mark(i,'mark-correct'); updateStats(true); showToast('答對'); nextTimer=setTimeout(makeQuestion,1100); } else { mark(i,'mark-wrong'); revealCorrect(); updateStats(false); showToast('再試一次'); setTimeout(()=>{ state.lock=false; },400); } }
+  function onClickTile(e){ if(state.lock)return; const i=parseInt(e.currentTarget.dataset.i,10); const correct=(i===state.answerIndex); state.lock=true; if(correct){ mark(i,'mark-correct'); updateStats(true); showToast('答對'); nextTimer=setTimeout(makeQuestion,1100); } else { mark(i,'mark-wrong'); updateStats(false); showToast('再試一次'); setTimeout(()=>{ state.lock=false; },400); } }
 
   btnNew.addEventListener('click',()=>makeQuestion());
   btnReset.addEventListener('click',()=>{ state.stats={total:0,right:0,streak:0}; qTotalEl.textContent=qRightEl.textContent=qStreakEl.textContent='0'; });
