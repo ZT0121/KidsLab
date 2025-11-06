@@ -18,7 +18,22 @@ body{ margin:0; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-se
   padding:12px; border:1px solid var(--b2,#dbeafe); border-radius:12px;
   background:var(--b1,#f8fafc);
 }
-#toolbar label{ font-size:14px; }
+#toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 18px;
+}
+#toolbar select {
+  font-family: 'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif;
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--b2);
+  height: 38px;
+  line-height: 1.2;
+  vertical-align: middle;
+}
 
 .btn, .btn-ghost {
   font-size:19px !important;
