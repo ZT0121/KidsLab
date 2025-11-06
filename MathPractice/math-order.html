@@ -7,10 +7,10 @@
 
 <link rel="stylesheet" href="../KidsLabTheme-vFinal.css">
 <link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
-  
+
 <style>
 :root{ --tile-size: 64px; }
-body{ margin:0; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif; }
+body{ margin:0; font-family:'BpmfIansui','Iansui','Noto Sans TC',sans-serif; }
 .container{ max-width:920px; margin:0 auto; padding:16px; }
 
 #toolbar{
@@ -20,15 +20,11 @@ body{ margin:0; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-se
 }
 #toolbar label{ font-size:14px; }
 
-.btn{ cursor:pointer; border:1px solid var(--b3,#bfdbfe); background:#fff;
-  padding:10px 14px; border-radius:10px; font-size:16px; }
-.btn:active{ transform:translateY(1px); }
-
 #prompt{ margin:16px 0 6px; font-size:20px; font-weight:700; }
 
 .row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:center; padding:14px; border:2px dashed var(--b2,#dbeafe); border-radius:14px; min-height:calc(var(--tile-size) + 28px); background:transparent; }
 
-.tile{ width:var(--tile-size); height:var(--tile-size); border-radius:14px; border:2px solid rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:34px; user-select:none; -webkit-tap-highlight-color:transparent; transition:transform .08s ease, box-shadow .15s ease; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif; background:#fff; }
+.tile{ width:var(--tile-size); height:var(--tile-size); border-radius:14px; border:2px solid rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:34px; user-select:none; -webkit-tap-highlight-color:transparent; transition:transform .08s ease, box-shadow .15s ease; font-family:'BpmfIansui','Iansui','Noto Sans TC',sans-serif; background:#fff; }
 .tile:active{ transform:scale(.97); }
 
 .mark-correct{ outline:3px solid #22c55e; box-shadow:0 0 0 6px rgba(34,197,94,.15) inset; }
@@ -36,7 +32,7 @@ body{ margin:0; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-se
 
 #status{ display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-top:10px; font-size:14px; opacity:.85; }
 
-.toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .2s; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif; }
+.toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .2s; font-family:'BpmfIansui','Iansui','Noto Sans TC',sans-serif; }
 .toast.show{ opacity:1; }
 
 .small{ font-size:12px; opacity:.75; }
@@ -55,7 +51,6 @@ body{ margin:0; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-se
     <a href="../MathPractice/math-order.html" class="active">順序與位置練習</a>
   </nav>
 
-
 <div class="container">
   <h1>順序與位置練習</h1>
 
@@ -67,9 +62,9 @@ body{ margin:0; font-family:'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-se
       </select>
     </label>
 
-    <button class="btn" id="btnNew">下一題</button>
+    <button class="btn btn-ghost" id="btnNew">下一題</button>
     <button class="btn" id="btnReset">重置統計</button>
-    <span class="small">答對自動出題</span>
+
   </div>
 
   <div id="prompt"></div>
