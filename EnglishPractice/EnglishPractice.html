@@ -8,59 +8,47 @@
   <link rel="preload" as="font" href="../BpmfIansui-Regular.ttf" type="font/ttf" crossorigin>
   <link rel="preload" as="font" href="../Iansui-Regular.ttf" type="font/ttf" crossorigin>
   <style>
-    /* 字體宣告與套用 */
     @font-face { font-family: 'BpmfIansui'; src: url('../BpmfIansui-Regular.ttf') format('truetype'); font-display: swap; }
     :root { --card-w: 920px; }
-    body, button, .btn, .chip, .opt, .pill, .question, .seg, label { font-family: 'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif; }
+    body, button, .btn, .chip, .opt, .question, .seg, label {
+      font-family: 'BpmfIansui','Iansui-Regular','Noto Sans TC',sans-serif;
+    }
 
-    /* 版面樣式 */
     body { max-width: var(--card-w); margin: 0 auto; padding: 16px; }
     header h1 { margin: 8px 0 4px; }
-    .lead { opacity: .8; margin: 0 0 16px; }
+    .lead { opacity:.8; margin:0 0 16px; }
 
-    .toolbar { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 10px 0 14px; }
-    @media(min-width:700px){ .toolbar{ grid-template-columns: 1fr 1fr; align-items: center; } }
+    .toolbar { display:grid; gap:10px; margin:10px 0 14px; }
     .seg { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-    .chip { border: 2px solid var(--b2, #93C5FD); border-radius: 999px; padding: 6px 12px; cursor: pointer; user-select: none; }
-    .chip.active { background: var(--b2, #93C5FD); color: #002; font-weight: 700; }
+    .chip { border:2px solid #93C5FD; border-radius:999px; padding:6px 12px; cursor:pointer; user-select:none; }
+    .chip.active { background:#93C5FD; color:#002; font-weight:700; }
 
-    .panel { border: 2px solid var(--b2, #93C5FD); border-radius: 16px; padding: 16px; background: var(--b1, #F0F9FF); }
-    .q-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-    .q-type { font-size: 14px; opacity:.8; }
+    .panel { border:2px solid #93C5FD; border-radius:16px; padding:16px; background:#F0F9FF; }
+    .q-type { font-size:14px; opacity:.8; }
+    .question { font-size:20px; margin:8px 0 14px; min-height:28px; }
+    .big-emoji { font-size:64px; line-height:1; }
 
-    .question { font-size: 20px; margin: 8px 0 14px; min-height: 28px; }
-    .big-emoji { font-size: 64px; line-height: 1; }
+    .opts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .opt { border:2px solid #BFDBFE; border-radius:12px; padding:12px; background:#fff; text-align:center; cursor:pointer; }
+    .opt.correct { border-color:#22C55E; box-shadow:0 0 0 3px rgba(34,197,94,.25) inset; }
+    .opt.wrong { border-color:#EF4444; box-shadow:0 0 0 3px rgba(239,68,68,.2) inset; }
 
-    .opts { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
-    @media (min-width: 640px){ .opts { grid-template-columns: repeat(3, minmax(0,1fr)); } }
-    .opt { border:2px solid #BFDBFE; border-radius: 12px; padding: 12px; background:#fff; cursor:pointer; text-align:center; }
-    .opt.correct { border-color: #22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,.25) inset; }
-    .opt.wrong { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,.2) inset; }
-
-    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight:700; border:2px solid #D1D5DB; border-radius: 6px; padding: 8px 10px; background:#fff; min-width:36px; display:inline-flex; align-items:center; justify-content:center; }
-    .letters { display:flex; flex-wrap:wrap; gap:10px; }
-    .slots { display:flex; flex-wrap:wrap; gap:10px; margin: 8px 0 12px; }
-
-    .status { display:flex; flex-wrap:wrap; gap: 12px; align-items:center; }
-    .pill { border:2px solid #93C5FD; padding:6px 10px; border-radius:999px; background:#fff; }
+    .kbd { font-family: ui-monospace, Menlo, monospace; font-weight:700; border:2px solid #D1D5DB; border-radius:6px; padding:8px 10px; background:#fff; min-width:36px; display:inline-flex; justify-content:center; align-items:center; }
+    .letters, .slots { display:flex; flex-wrap:wrap; gap:10px; margin:8px 0; }
 
     .actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; margin-top:12px; }
-    button.btn { border:0; padding:10px 14px; border-radius: 10px; cursor:pointer; font-weight:700; }
-    .btn { color:#111; }
+    button.btn { border:0; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
     .btn.primary { background:#60A5FA; color:#001; }
     .btn.ghost { background:#fff; border:2px solid #93C5FD; color:#111; }
 
-    .hint { font-size: 14px; opacity:.8; margin-top: 6px; }
-    .toast { position: fixed; left: 50%; top: 18px; transform: translateX(-50%); background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .18s; }
+    .toast { position:fixed; left:50%; top:18px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .18s; }
     .toast.show { opacity:1; }
-
-    .hidden { display:none !important; }
   </style>
 </head>
 <body>
   <header>
     <h1>🧠 KidsLab｜English Practice</h1>
-    <p class="lead">四主題：動物、食物、物品、生活句型。含 Hunter 模式。</p>
+    <p class="lead">四主題：動物、食物、物品、生活句型。</p>
   </header>
 
   <div class="toolbar panel">
@@ -77,33 +65,11 @@
       <div class="chip" data-mode="spell">🔡 拼字</div>
       <div class="chip" data-mode="sentence">🗣️ 句型</div>
     </div>
-    <div class="seg" id="profileSeg">
-      <div class="chip" data-profile="hunter">🧒 Hunter 模式</div>
-      <div class="chip active" data-profile="default">👤 一般模式</div>
-    </div>
-    <div class="seg">
-      <label class="chip" style="display:flex;gap:6px;align-items:center;">
-        <input id="toggleHint" type="checkbox" style="scale:1.2" /> 家長提示
-      </label>
-      <label class="chip" style="display:flex;gap:6px;align-items:center;">
-        <input id="toggleVoice" type="checkbox" style="scale:1.2" checked /> 自動朗讀
-      </label>
-    </div>
   </div>
 
-  <!-- 題目卡 -->
   <div class="panel" id="card">
-    <div class="q-head">
-      <div class="q-type" id="qType">準備中…</div>
-      <div class="status">
-        <div class="pill">LV <span id="lv">1</span></div>
-        <div class="pill">⭐ <span id="stars">0</span></div>
-        <div class="pill">XP <span id="xp">0</span>/10</div>
-      </div>
-    </div>
-
+    <div class="q-type" id="qType">準備中…</div>
     <div class="question" id="question"></div>
-
     <div id="mcArea" class="opts"></div>
 
     <div id="spellArea" class="hidden">
@@ -112,11 +78,8 @@
       <div class="actions">
         <button class="btn ghost" id="btnClear">清除</button>
         <button class="btn primary" id="btnSubmit">送出</button>
-      </div>
-      <div class="actions">
         <button class="btn ghost" id="btnHint">提示一個字母</button>
       </div>
-      <div class="hint" id="spellHint" style="display:none;"></div>
     </div>
 
     <div class="actions">
@@ -125,101 +88,60 @@
     </div>
   </div>
 
-  <div class="hint" id="parentHint" style="display:none; margin-top:8px;">
-    家長提示：請孩子先聽 2 次再作答。只需鼓勵，不糾正發音。
-  </div>
-
   <div id="toast" class="toast">Good!</div>
 
   <script>
-    // ========== 外部題庫載入 ==========
-    const TOPICS = ["animals","foods","objects","phrases"];
-    let BANK = { animals:[], foods:[], objects:[], phrases:[] };
+    const TOPICS=["animals","foods","objects","phrases"];
+    let BANK={animals:[],foods:[],objects:[],phrases:[]};
 
-    async function loadTopic(topic){
-      try{ const res = await fetch(`data/en/${topic}.json`, {cache:'no-store'}); if(!res.ok) throw new Error('net'); const data = await res.json(); return data.items||[]; }
-      catch(e){ console.warn(`[BANK] ${topic} 載入失敗，改用內建`); return null; }
-    }
-    async function loadAllBanks(){
-      const results = await Promise.all(TOPICS.map(t=>loadTopic(t)));
-      const [A,F,O,P] = results;
-      BANK.animals = A || [ {w:'cat',zh:'貓',emoji:'🐱'},{w:'dog',zh:'狗',emoji:'🐶'},{w:'fish',zh:'魚',emoji:'🐟'},{w:'bird',zh:'鳥',emoji:'🐦'} ];
-      BANK.foods   = F || [ {w:'apple',zh:'蘋果',emoji:'🍎'},{w:'milk',zh:'牛奶',emoji:'🥛'},{w:'bread',zh:'麵包',emoji:'🍞'},{w:'rice',zh:'白飯',emoji:'🍚'} ];
-      BANK.objects = O || [ {w:'bag',zh:'書包',emoji:'🎒'},{w:'door',zh:'門',emoji:'🚪'},{w:'book',zh:'書',emoji:'📖'},{w:'ball',zh:'球',emoji:'⚽'} ];
-      BANK.phrases = P || [ {s:'Wash your hands, please.',zh:'請洗手。',resp:['Okay!','I am a cat.','Banana.']}, {s:'Time for bed!',zh:'睡覺時間到了！',resp:['Okay, good night!','I am hungry.','Open the door.']} ];
+    async function loadTopic(t){try{const r=await fetch(`data/en/${t}.json`,{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();return d.items||[]}catch{return null}}
+    async function loadAll(){const r=await Promise.all(TOPICS.map(loadTopic));const [A,F,O,P]=r;
+      BANK.animals=A||[{w:'cat',zh:'貓',emoji:'🐱'},{w:'dog',zh:'狗',emoji:'🐶'},{w:'fish',zh:'魚',emoji:'🐟'},{w:'bird',zh:'鳥',emoji:'🐦'}];
+      BANK.foods=F||[{w:'apple',zh:'蘋果',emoji:'🍎'},{w:'milk',zh:'牛奶',emoji:'🥛'},{w:'bread',zh:'麵包',emoji:'🍞'},{w:'rice',zh:'白飯',emoji:'🍚'}];
+      BANK.objects=O||[{w:'bag',zh:'書包',emoji:'🎒'},{w:'door',zh:'門',emoji:'🚪'},{w:'book',zh:'書',emoji:'📖'},{w:'ball',zh:'球',emoji:'⚽'}];
+      BANK.phrases=P||[{s:'Wash your hands, please.',zh:'請洗手。',resp:['Okay!','I am a cat.','Banana.']},{s:'Time for bed!',zh:'睡覺時間到了！',resp:['Okay, good night!','I am hungry.','Open the door.']}];
     }
 
-    // ========== 狀態 ==========
-    const state = {
-      topic: localStorage.getItem('en_topic') || 'animals',
-      mode: localStorage.getItem('en_mode') || 'mix',
-      lv: parseInt(localStorage.getItem('en_lv') || '1', 10),
-      xp: parseInt(localStorage.getItem('en_xp') || '0', 10),
-      stars: parseInt(localStorage.getItem('en_stars') || '0', 10),
-      difficulty: localStorage.getItem('en_diff') || 'standard',
-      profile: localStorage.getItem('en_profile') || 'default',
-      autoVoice: localStorage.getItem('en_autovoice') !== '0',
-      hint: localStorage.getItem('en_hint') === '1',
-      current: null,
-    };
+    const state={topic:'animals',mode:'mix',autoVoice:true,current:null};
+    const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
+    const qType=$('#qType'),question=$('#question'),mc=$('#mcArea'),spell=$('#spellArea'),slots=$('#slots'),letters=$('#letters');
+    const btnNext=$('#btnNext'),btnReplay=$('#btnReplay'),btnClear=$('#btnClear'),btnSubmit=$('#btnSubmit'),btnHint=$('#btnHint'),toast=$('#toast');
 
-    // ========== DOM ==========
-    const $ = s => document.querySelector(s); const $$ = s => Array.from(document.querySelectorAll(s));
-    const qType = $('#qType'); const question = $('#question'); const mcArea = $('#mcArea'); const spellArea = $('#spellArea'); const slots = $('#slots'); const letters = $('#letters');
-    const btnNext = $('#btnNext'); const btnReplay = $('#btnReplay'); const btnClear = $('#btnClear'); const btnSubmit = $('#btnSubmit'); const btnHint = $('#btnHint');
-    const lvEl = $('#lv'); const xpEl = $('#xp'); const starsEl = $('#stars'); const parentHint = $('#parentHint'); const toggleHint = $('#toggleHint'); const toggleVoice = $('#toggleVoice'); const toast = $('#toast');
+    function speak(t){if(!state.autoVoice)return;try{const u=new SpeechSynthesisUtterance(t);const en=speechSynthesis.getVoices().find(v=>/en/i.test(v.lang));if(en)u.voice=en;speechSynthesis.cancel();speechSynthesis.speak(u);}catch{}}
+    const rnd=n=>Math.floor(Math.random()*n);
+    const shuffle=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+    const pop=t=>{toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),900);};
+    const nextMode=()=>state.topic==='phrases'?['sentence','listen'][rnd(2)]:['listen','picture','spell'][rnd(3)];
 
-    function save(){ localStorage.setItem('en_topic', state.topic); localStorage.setItem('en_mode', state.mode); localStorage.setItem('en_lv', String(state.lv)); localStorage.setItem('en_xp', String(state.xp)); localStorage.setItem('en_stars', String(state.stars)); localStorage.setItem('en_diff', state.difficulty); localStorage.setItem('en_profile', state.profile); localStorage.setItem('en_autovoice', state.autoVoice ? '1':'0'); localStorage.setItem('en_hint', state.hint ? '1':'0'); }
-    function updateHUD(){ lvEl.textContent = state.lv; xpEl.textContent = state.xp; starsEl.textContent = state.stars; parentHint.style.display = state.hint ? 'block' : 'none'; toggleHint.checked = state.hint; toggleVoice.checked = state.autoVoice; $$('#topicSeg .chip').forEach(c=>c.classList.toggle('active', c.dataset.topic===state.topic)); $$('#modeSeg .chip').forEach(c=>c.classList.toggle('active', c.dataset.mode===state.mode)); $$('#profileSeg .chip').forEach(c=>c.classList.toggle('active', c.dataset.profile===state.profile)); }
-
-    // ========== 語音 ==========
-    function speak(text){ if(!state.autoVoice) return; try{ const u = new SpeechSynthesisUtterance(text); const en = speechSynthesis.getVoices().find(v=>/en/i.test(v.lang)); if(en) u.voice=en; u.rate=0.95; speechSynthesis.cancel(); speechSynthesis.speak(u); }catch{} }
-
-    // ========== 工具 ==========
-    const rnd = n => Math.floor(Math.random()*n);
-    function shuffle(arr){ return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); }
-    function popToast(t){ toast.textContent=t; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 900); }
-    function choiceCountForMode(mode){ const d=state.difficulty; const map={ listen:{easy:2,standard:3,hard:4}, picture:{easy:2,standard:3,hard:4}, sentence:{easy:2,standard:3,hard:4} }; return (map[mode]&&map[mode][d])||3; }
-    function pickN(list, correct, n){ const arr = shuffle(list.filter(x=> (x.w||x.s)!==(correct.w||correct.s))); const need=Math.max(0,n-1); return shuffle([correct, ...arr.slice(0,need)]); }
-    function lettersWithDifficulty(answer){ if(state.difficulty==='hard'){ const alphabet='abcdefghijklmnopqrstuvwxyz'; const extras=[]; while(extras.length<2){ const ch=alphabet[Math.floor(Math.random()*alphabet.length)]; if(!answer.includes(ch)) extras.push(ch);} return shuffle([...answer.split(''),...extras]); } if(state.difficulty==='standard'){ const alphabet='abcdefghijklmnopqrstuvwxyz'; let extra=alphabet[Math.floor(Math.random()*alphabet.length)]; while(answer.includes(extra)) extra=alphabet[Math.floor(Math.random()*alphabet.length)]; return shuffle([...answer.split(''), extra]); } return shuffle(answer.split('')); }
-    function reward(ok=true){ if(!ok) return; state.xp+=1; if(state.xp>=10){ state.xp=0; state.lv+=1; state.stars+=1; popToast('LV UP ⭐'); } save(); updateHUD(); }
-    function nextModeForMix(){ const pool = state.topic==='phrases' ? ['sentence','listen'] : ['listen','picture','spell']; return pool[rnd(pool.length)]; }
-
-    // ========== 出題 ==========
     function newRound(){
-      mcArea.innerHTML=''; spellArea.classList.add('hidden'); slots.innerHTML=''; letters.innerHTML=''; question.innerHTML='';
-      const mode = state.mode==='mix' ? nextModeForMix() : state.mode; const bank = BANK[state.topic]; if(!bank||bank.length===0){ question.textContent='此主題尚無題庫'; return; }
-      if(mode==='sentence'){ const item=bank[rnd(bank.length)]; state.current={mode, s:item.s, zh:item.zh, ans:item.resp[0]}; qType.textContent='🗣️ 句型：選出自然回應'; question.textContent=item.s; const n=choiceCountForMode('sentence'); const opts=[item.resp[0], ...shuffle(item.resp.slice(1))].slice(0,n); opts.forEach(o=>mcArea.appendChild(renderOpt(o, o===item.resp[0]))); speak(item.s); return; }
-      const item=bank[rnd(bank.length)];
-      if(mode==='listen'){ state.current={mode, ans:item.w, zh:item.zh}; qType.textContent='🔊 聽音選字'; question.innerHTML='<span class="hint">請聽語音，選正確單字</span>'; const opts=pickN(bank,item,choiceCountForMode('listen')); opts.forEach(o=>mcArea.appendChild(renderOpt(o.w, o===item))); speak(item.w); setTimeout(()=>{ if(state.difficulty==='easy') speak(item.w); },600); return; }
-      if(mode==='picture'){ state.current={mode, ans:item.w, zh:item.zh}; qType.textContent='🖼️ 看圖選字'; question.innerHTML=`<span class="big-emoji" aria-label="${item.w}">${item.emoji||'❔'}</span>`; const opts=pickN(bank,item,choiceCountForMode('picture')); opts.forEach(o=>mcArea.appendChild(renderOpt(o.w, o===item))); speak(item.w); return; }
-      if(mode==='spell'){ state.current={mode, ans:item.w, zh:item.zh}; qType.textContent='🔡 拼字：拖放字母組成正確單字'; question.innerHTML=`<span class="big-emoji">${item.emoji||'❔'}</span>`; setupSpelling(item.w); speak(item.w); return; }
+      mc.innerHTML='';spell.classList.add('hidden');slots.innerHTML='';letters.innerHTML='';question.innerHTML='';
+      const mode=state.mode==='mix'?nextMode():state.mode;const bank=BANK[state.topic];
+      if(!bank?.length){question.textContent='此主題尚無題庫';return;}
+      if(mode==='sentence'){const it=bank[rnd(bank.length)];state.current={mode,s:it.s,ans:it.resp[0]};qType.textContent='🗣️ 句型';question.textContent=it.s;const opts=[it.resp[0],...shuffle(it.resp.slice(1))];opts.forEach(o=>mc.appendChild(opt(o,o===it.resp[0])));speak(it.s);return;}
+      const it=bank[rnd(bank.length)];
+      if(mode==='listen'){state.current={mode,ans:it.w};qType.textContent='🔊 聽音選字';question.innerHTML='<span>請聽語音選正確單字</span>';const opts=[it,...shuffle(bank.filter(x=>x!==it)).slice(0,1)];opts.forEach(o=>mc.appendChild(opt(o.w,o===it)));speak(it.w);setTimeout(()=>speak(it.w),600);return;}
+      if(mode==='picture'){state.current={mode,ans:it.w};qType.textContent='🖼️ 看圖選字';question.innerHTML=`<span class='big-emoji'>${it.emoji||'❔'}</span>`;const opts=[it,...shuffle(bank.filter(x=>x!==it)).slice(0,1)];opts.forEach(o=>mc.appendChild(opt(o.w,o===it)));speak(it.w);return;}
+      if(mode==='spell'){state.current={mode,ans:it.w};qType.textContent='🔡 拼字';question.innerHTML=`<span class='big-emoji'>${it.emoji||'❔'}</span>`;setupSpell(it.w);speak(it.w);}
     }
 
-    function renderOpt(text, isCorrect){ const el=document.createElement('div'); el.className='opt'; el.textContent=text; el.addEventListener('click',()=>{ if(el.classList.contains('correct')||el.classList.contains('wrong')) return; if(isCorrect){ el.classList.add('correct'); popToast('Nice!'); reward(true); setTimeout(()=>newRound(),700);} else { el.classList.add('wrong'); popToast('Try again'); } }); return el; }
+    const opt=(t,ok)=>{const e=document.createElement('div');e.className='opt';e.textContent=t;e.onclick=()=>{if(ok){e.classList.add('correct');pop('✅ Good job!');setTimeout(newRound,700);}else{e.classList.add('wrong');pop('❌ Try again');}};return e;};
 
-    function setupSpelling(answer){
-      mcArea.innerHTML=''; spellArea.classList.remove('hidden'); $('#spellHint').style.display = state.hint ? 'block':'none'; $('#spellHint').textContent = `提示：${answer}（${state.current.zh}）`;
-      const lettersPool=lettersWithDifficulty(answer); const slotEls=[]; for(let i=0;i<answer.length;i++){ const s=document.createElement('div'); s.className='kbd'; s.dataset.slot=i; s.textContent='_'; slots.appendChild(s); slotEls.push(s);} lettersPool.forEach(ch=>{ const k=document.createElement('button'); k.className='kbd'; k.textContent=ch; k.dataset.char=ch; k.addEventListener('click',()=>placeChar(k)); letters.appendChild(k); }); if(state.difficulty==='easy'&&slotEls.length){ slotEls[0].textContent=answer[0]; const firstBtn=Array.from(document.querySelectorAll('#letters .kbd')).find(b=>b.dataset.char===answer[0]&&!b.disabled); if(firstBtn) firstBtn.disabled=true; }
-      function placeChar(btn){ const empty=slotEls.find(x=>x.textContent==='_'); if(!empty) return; empty.textContent=btn.dataset.char; btn.disabled=true; }
-      btnClear.onclick=()=>{ slotEls.forEach(s=>s.textContent='_'); $$('#letters .kbd').forEach(b=>b.disabled=false); };
-      btnSubmit.onclick=()=>{ const guess=slotEls.map(s=>s.textContent).join(''); if(guess===answer){ popToast('Perfect'); reward(true); setTimeout(()=>newRound(),700);} else { popToast('Oops'); } };
-      btnHint.onclick=()=>{ if(state.difficulty==='hard'){ popToast('挑戰模式無提示'); return; } const idx=slotEls.findIndex(x=>x.textContent==='_'); if(idx===-1) return; slotEls[idx].textContent=answer[idx]; const btn=Array.from(document.querySelectorAll('#letters .kbd')).find(b=>b.dataset.char===answer[idx]&&!b.disabled); if(btn) btn.disabled=true; if(slotEls.every(s=>s.textContent!=='_')){ const guess=slotEls.map(s=>s.textContent).join(''); if(guess===answer){ popToast('Perfect'); reward(true); setTimeout(()=>newRound(),700);} }
-      };
+    function setupSpell(a){
+      mc.innerHTML='';spell.classList.remove('hidden');
+      const pool=shuffle(a.split(''));const sl=[];for(let i=0;i<a.length;i++){const s=document.createElement('div');s.className='kbd';s.textContent='_';slots.appendChild(s);sl.push(s);}
+      pool.forEach(c=>{const b=document.createElement('button');b.className='kbd';b.textContent=c;b.onclick=()=>place(b);letters.appendChild(b);});
+      function place(b){const e=sl.find(x=>x.textContent=='_');if(!e)return;e.textContent=b.textContent;b.disabled=true;}
+      btnClear.onclick=()=>{sl.forEach(s=>s.textContent='_');$$('#letters .kbd').forEach(b=>b.disabled=false);};
+      btnSubmit.onclick=()=>{const g=sl.map(s=>s.textContent).join('');if(g===a){pop('✅ Perfect!');setTimeout(newRound,700);}else pop('❌ Oops');};
+      btnHint.onclick=()=>{const i=sl.findIndex(x=>x.textContent=='_');if(i===-1)return;sl[i].textContent=a[i];const b=[...document.querySelectorAll('#letters .kbd')].find(b=>b.textContent===a[i]&&!b.disabled);if(b)b.disabled=true;};
     }
 
-    // ========== 事件 ==========
-    $('#topicSeg').addEventListener('click', e=>{ const t=e.target.closest('.chip'); if(!t) return; state.topic=t.dataset.topic; save(); updateHUD(); newRound(); });
-    $('#modeSeg').addEventListener('click', e=>{ const t=e.target.closest('.chip'); if(!t) return; state.mode=t.dataset.mode; save(); updateHUD(); newRound(); });
-    $('#profileSeg').addEventListener('click', e=>{ const t=e.target.closest('.chip'); if(!t) return; const p=t.dataset.profile; state.profile=p; if(p==='hunter'){ state.difficulty='easy'; state.hint=true; state.autoVoice=true; if(state.topic==='phrases') state.topic='animals'; } else { state.difficulty='standard'; } save(); updateHUD(); newRound(); });
+    $('#topicSeg').onclick=e=>{const t=e.target.closest('.chip');if(!t)return;state.topic=t.dataset.topic;$$('#topicSeg .chip').forEach(c=>c.classList.toggle('active',c===t));newRound();};
+    $('#modeSeg').onclick=e=>{const t=e.target.closest('.chip');if(!t)return;state.mode=t.dataset.mode;$$('#modeSeg .chip').forEach(c=>c.classList.toggle('active',c===t));newRound();};
+    btnNext.onclick=newRound;
+    btnReplay.onclick=()=>{if(!state.current)return;speak(state.current.ans||state.current.s);};
 
-    btnNext.addEventListener('click', newRound);
-    btnReplay.addEventListener('click', ()=>{ if(!state.current) return; if(state.current.mode==='sentence') speak(state.current.s); else if(state.current.ans) speak(state.current.ans); });
-    toggleHint.addEventListener('change', ()=>{ state.hint=toggleHint.checked; save(); updateHUD(); });
-    toggleVoice.addEventListener('change', ()=>{ state.autoVoice=toggleVoice.checked; save(); });
-
-    // ========== 啟動 ==========
-    (async function init(){ await loadAllBanks(); updateHUD(); newRound(); })();
+    (async()=>{await loadAll();newRound();})();
   </script>
 </body>
 </html>
