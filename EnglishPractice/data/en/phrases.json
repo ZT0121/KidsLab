@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "s": "Wash your hands, please.",
+      "zh": "請洗手。",
+      "resp": ["Okay!", "I am a cat.", "Banana."]
+    },
+    {
+      "s": "Time for bed!",
+      "zh": "睡覺時間到了！",
+      "resp": ["Okay, good night!", "I am hungry.", "Open the door."]
+    }
+  ]
+}
