@@ -66,6 +66,31 @@
   border: 2px solid var(--b2);
   color: var(--text);
 }
+    
+/* === 修正 English Practice 選項按鈕 === */
+.opt {
+  display: inline-block;
+  background: var(--b1);
+  border: 2px solid var(--b3);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.opt:hover {
+  background: var(--b2);
+  color: var(--text-strong);
+}
+.opt.correct {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+.opt.wrong {
+  border-color: var(--error);
+  background: var(--error-soft);
+}
 
     .toast { position:fixed; left:50%; top:18px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .18s; }
     .toast.show { opacity:1; }
