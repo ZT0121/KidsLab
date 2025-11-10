@@ -53,25 +53,10 @@
     }
     .toast.show { opacity:1; }
 
-    /* ========== 樣式修正與拼字區 ========== */
+    /* === 題型與拼字樣式 === */
     .q-type   { font-size: 18px; }
     .question { font-size: 22px; }
     .big-emoji { font-size: 64px; line-height:1; }
-
-    .opt {
-      display:inline-block;
-      background: var(--b1);
-      border: 2px solid var(--b3);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 20px;
-      text-align:center;
-      cursor:pointer;
-      transition:all .2s;
-    }
-    .opt:hover { background: var(--b2); color: var(--text-strong); }
-    .opt.correct { border-color: var(--success); background: var(--success-soft); }
-    .opt.wrong   { border-color: var(--error); background: var(--error-soft); }
 
     #spellArea { width:100%; }
     .slots, .letters {
@@ -95,6 +80,48 @@
     .slots .kbd { background:#fff; }
 
     .hidden { display:none !important; }
+
+    /* === English Practice 選項外觀與間距調整 === */
+    #mcArea {
+      margin-top: 20px;
+      margin-bottom: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .opt {
+      display: inline-block;
+      background: var(--b1-hover, #e0f2ff);
+      border: 2px solid var(--b2);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 22px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      min-width: 90px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .opt:hover {
+      background: var(--b2);
+      color: var(--text-strong);
+      transform: scale(1.05);
+    }
+
+    .opt.correct {
+      border-color: var(--success);
+      background: var(--success-soft);
+      color: var(--text-strong);
+    }
+
+    .opt.wrong {
+      border-color: var(--error);
+      background: var(--error-soft);
+      color: var(--text-strong);
+    }
   </style>
 </head>
 <body>
@@ -143,10 +170,10 @@
   <div id="toast" class="toast">Good!</div>
 
   <script>
-    const TOPICS = ["animals","foods","objects","phrases"];
-    let BANK = { animals:[], foods:[], objects:[], phrases:[] };
+    const TOPICS=["animals","foods","objects","phrases"];
+    let BANK={animals:[],foods:[],objects:[],phrases:[]};
 
-    // 只讀取 JSON 題庫
+    // 僅使用 JSON 題庫
     async function loadTopic(topic){
       try{
         const res = await fetch(`data/en/${topic}.json`, {cache:'no-store'});
@@ -161,10 +188,7 @@
 
     async function loadAll(){
       const [A,F,O,P] = await Promise.all(TOPICS.map(loadTopic));
-      BANK.animals = A;
-      BANK.foods   = F;
-      BANK.objects = O;
-      BANK.phrases = P;
+      BANK.animals=A; BANK.foods=F; BANK.objects=O; BANK.phrases=P;
     }
 
     const state={topic:'animals',mode:'mix',autoVoice:true,current:null};
@@ -178,8 +202,7 @@
         const u=new SpeechSynthesisUtterance(t);
         const en=speechSynthesis.getVoices().find(v=>/en/i.test(v.lang));
         if(en)u.voice=en;
-        speechSynthesis.cancel();
-        speechSynthesis.speak(u);
+        speechSynthesis.cancel(); speechSynthesis.speak(u);
       }catch{}
     }
     const rnd=n=>Math.floor(Math.random()*n);
@@ -211,8 +234,7 @@
         question.innerHTML='<span>請聽語音選正確單字</span>';
         const opts=[it,...shuffle(bank.filter(x=>x!==it)).slice(0,1)];
         opts.forEach(o=>mc.appendChild(opt(o.w,o===it)));
-        speak(it.w);
-        setTimeout(()=>speak(it.w),600);
+        speak(it.w); setTimeout(()=>speak(it.w),600);
         return;
       }
       if(mode==='picture'){
