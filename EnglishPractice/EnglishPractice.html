@@ -20,80 +20,81 @@
 
     .toolbar { display:grid; gap:10px; margin:10px 0 14px; }
     .seg { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+
     .chip {
-  border: 2px solid var(--b2);
-  border-radius: 999px;
-  padding: 6px 12px;
-  cursor: pointer;
-  user-select: none;
-}
-.chip.active {
-  background: var(--b2);
-  color: var(--text-strong);
-  font-weight: 700;
-}
+      border: 2px solid var(--b2);
+      border-radius: 999px;
+      padding: 6px 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip.active {
+      background: var(--b2);
+      color: var(--text-strong);
+      font-weight: 700;
+    }
 
-.panel {
-  border: 2px solid var(--b2);
-  border-radius: 16px;
-  padding: 16px;
-  background: var(--b1);
-}
+    .panel {
+      border: 2px solid var(--b2);
+      border-radius: 16px;
+      padding: 16px;
+      background: var(--b1);
+    }
 
-.opt {
-  border: 2px solid var(--b3);
-  border-radius: 12px;
-  padding: 12px;
-  background: var(--b1);
-  text-align: center;
-  cursor: pointer;
-}
-.opt.correct {
-  border-color: var(--success);
-  box-shadow: 0 0 0 3px var(--success-soft) inset;
-}
-.opt.wrong {
-  border-color: var(--error);
-  box-shadow: 0 0 0 3px var(--error-soft) inset;
-}
+    .btn.primary { background: var(--b2); color: var(--text-strong); }
+    .btn.ghost { background: var(--b1); border: 2px solid var(--b2); color: var(--text); }
 
-.btn.primary {
-  background: var(--b2);
-  color: var(--text-strong);
-}
-.btn.ghost {
-  background: var(--b1);
-  border: 2px solid var(--b2);
-  color: var(--text);
-}
-    
-/* === 修正 English Practice 選項按鈕 === */
-.opt {
-  display: inline-block;
-  background: var(--b1);
-  border: 2px solid var(--b3);
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-size: 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.opt:hover {
-  background: var(--b2);
-  color: var(--text-strong);
-}
-.opt.correct {
-  border-color: var(--success);
-  background: var(--success-soft);
-}
-.opt.wrong {
-  border-color: var(--error);
-  background: var(--error-soft);
-}
-
-    .toast { position:fixed; left:50%; top:18px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .18s; }
+    .toast {
+      position:fixed; left:50%; top:18px;
+      transform:translateX(-50%);
+      background:#111; color:#fff;
+      padding:10px 14px; border-radius:10px;
+      opacity:0; transition:opacity .18s;
+    }
     .toast.show { opacity:1; }
+
+    /* ========== 樣式修正與拼字區 ========== */
+    .q-type   { font-size: 18px; }
+    .question { font-size: 22px; }
+    .big-emoji { font-size: 64px; line-height:1; }
+
+    .opt {
+      display:inline-block;
+      background: var(--b1);
+      border: 2px solid var(--b3);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 20px;
+      text-align:center;
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .opt:hover { background: var(--b2); color: var(--text-strong); }
+    .opt.correct { border-color: var(--success); background: var(--success-soft); }
+    .opt.wrong   { border-color: var(--error); background: var(--error-soft); }
+
+    #spellArea { width:100%; }
+    .slots, .letters {
+      display:flex; flex-wrap:wrap; flex-direction:row;
+      justify-content:center; gap:10px; margin:8px 0;
+    }
+
+    .kbd {
+      font-family: ui-monospace, Menlo, monospace;
+      font-weight:700;
+      width:44px; height:44px; line-height:44px;
+      border:2px solid var(--b3);
+      border-radius:8px;
+      background: var(--b1);
+      text-align:center;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space:pre;
+    }
+    .slots .kbd { background:#fff; }
+
+    .hidden { display:none !important; }
   </style>
 </head>
 <body>
@@ -142,15 +143,28 @@
   <div id="toast" class="toast">Good!</div>
 
   <script>
-    const TOPICS=["animals","foods","objects","phrases"];
-    let BANK={animals:[],foods:[],objects:[],phrases:[]};
+    const TOPICS = ["animals","foods","objects","phrases"];
+    let BANK = { animals:[], foods:[], objects:[], phrases:[] };
 
-    async function loadTopic(t){try{const r=await fetch(`data/en/${t}.json`,{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();return d.items||[]}catch{return null}}
-    async function loadAll(){const r=await Promise.all(TOPICS.map(loadTopic));const [A,F,O,P]=r;
-      BANK.animals=A||[{w:'cat',zh:'貓',emoji:'🐱'},{w:'dog',zh:'狗',emoji:'🐶'},{w:'fish',zh:'魚',emoji:'🐟'},{w:'bird',zh:'鳥',emoji:'🐦'}];
-      BANK.foods=F||[{w:'apple',zh:'蘋果',emoji:'🍎'},{w:'milk',zh:'牛奶',emoji:'🥛'},{w:'bread',zh:'麵包',emoji:'🍞'},{w:'rice',zh:'白飯',emoji:'🍚'}];
-      BANK.objects=O||[{w:'bag',zh:'書包',emoji:'🎒'},{w:'door',zh:'門',emoji:'🚪'},{w:'book',zh:'書',emoji:'📖'},{w:'ball',zh:'球',emoji:'⚽'}];
-      BANK.phrases=P||[{s:'Wash your hands, please.',zh:'請洗手。',resp:['Okay!','I am a cat.','Banana.']},{s:'Time for bed!',zh:'睡覺時間到了！',resp:['Okay, good night!','I am hungry.','Open the door.']}];
+    // 只讀取 JSON 題庫
+    async function loadTopic(topic){
+      try{
+        const res = await fetch(`data/en/${topic}.json`, {cache:'no-store'});
+        if(!res.ok) throw new Error(`Failed to load ${topic}`);
+        const data = await res.json();
+        return data.items || [];
+      }catch(e){
+        console.error(`[BANK] 無法載入 ${topic}.json`, e);
+        return [];
+      }
+    }
+
+    async function loadAll(){
+      const [A,F,O,P] = await Promise.all(TOPICS.map(loadTopic));
+      BANK.animals = A;
+      BANK.foods   = F;
+      BANK.objects = O;
+      BANK.phrases = P;
     }
 
     const state={topic:'animals',mode:'mix',autoVoice:true,current:null};
@@ -158,41 +172,114 @@
     const qType=$('#qType'),question=$('#question'),mc=$('#mcArea'),spell=$('#spellArea'),slots=$('#slots'),letters=$('#letters');
     const btnNext=$('#btnNext'),btnReplay=$('#btnReplay'),btnClear=$('#btnClear'),btnSubmit=$('#btnSubmit'),btnHint=$('#btnHint'),toast=$('#toast');
 
-    function speak(t){if(!state.autoVoice)return;try{const u=new SpeechSynthesisUtterance(t);const en=speechSynthesis.getVoices().find(v=>/en/i.test(v.lang));if(en)u.voice=en;speechSynthesis.cancel();speechSynthesis.speak(u);}catch{}}
+    function speak(t){
+      if(!state.autoVoice)return;
+      try{
+        const u=new SpeechSynthesisUtterance(t);
+        const en=speechSynthesis.getVoices().find(v=>/en/i.test(v.lang));
+        if(en)u.voice=en;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      }catch{}
+    }
     const rnd=n=>Math.floor(Math.random()*n);
     const shuffle=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
     const pop=t=>{toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),900);};
     const nextMode=()=>state.topic==='phrases'?['sentence','listen'][rnd(2)]:['listen','picture','spell'][rnd(3)];
 
     function newRound(){
-      mc.innerHTML='';spell.classList.add('hidden');slots.innerHTML='';letters.innerHTML='';question.innerHTML='';
-      const mode=state.mode==='mix'?nextMode():state.mode;const bank=BANK[state.topic];
+      mc.innerHTML=''; spell.classList.add('hidden'); slots.innerHTML=''; letters.innerHTML=''; question.innerHTML='';
+      const mode=state.mode==='mix'?nextMode():state.mode;
+      const bank=BANK[state.topic];
       if(!bank?.length){question.textContent='此主題尚無題庫';return;}
-      if(mode==='sentence'){const it=bank[rnd(bank.length)];state.current={mode,s:it.s,ans:it.resp[0]};qType.textContent='🗣️ 句型';question.textContent=it.s;const opts=[it.resp[0],...shuffle(it.resp.slice(1))];opts.forEach(o=>mc.appendChild(opt(o,o===it.resp[0])));speak(it.s);return;}
+
+      if(mode==='sentence'){
+        const it=bank[rnd(bank.length)];
+        state.current={mode,s:it.s,ans:it.resp[0]};
+        qType.textContent='🗣️ 句型';
+        question.textContent=it.s;
+        const opts=[it.resp[0],...shuffle(it.resp.slice(1))];
+        opts.forEach(o=>mc.appendChild(opt(o,o===it.resp[0])));
+        speak(it.s);
+        return;
+      }
+
       const it=bank[rnd(bank.length)];
-      if(mode==='listen'){state.current={mode,ans:it.w};qType.textContent='🔊 聽音選字';question.innerHTML='<span>請聽語音選正確單字</span>';const opts=[it,...shuffle(bank.filter(x=>x!==it)).slice(0,1)];opts.forEach(o=>mc.appendChild(opt(o.w,o===it)));speak(it.w);setTimeout(()=>speak(it.w),600);return;}
-      if(mode==='picture'){state.current={mode,ans:it.w};qType.textContent='🖼️ 看圖選字';question.innerHTML=`<span class='big-emoji'>${it.emoji||'❔'}</span>`;const opts=[it,...shuffle(bank.filter(x=>x!==it)).slice(0,1)];opts.forEach(o=>mc.appendChild(opt(o.w,o===it)));speak(it.w);return;}
-      if(mode==='spell'){state.current={mode,ans:it.w};qType.textContent='🔡 拼字';question.innerHTML=`<span class='big-emoji'>${it.emoji||'❔'}</span>`;setupSpell(it.w);speak(it.w);}
+      if(mode==='listen'){
+        state.current={mode,ans:it.w};
+        qType.textContent='🔊 聽音選字';
+        question.innerHTML='<span>請聽語音選正確單字</span>';
+        const opts=[it,...shuffle(bank.filter(x=>x!==it)).slice(0,1)];
+        opts.forEach(o=>mc.appendChild(opt(o.w,o===it)));
+        speak(it.w);
+        setTimeout(()=>speak(it.w),600);
+        return;
+      }
+      if(mode==='picture'){
+        state.current={mode,ans:it.w};
+        qType.textContent='🖼️ 看圖選字';
+        question.innerHTML=`<span class='big-emoji'>${it.emoji||'❔'}</span>`;
+        const opts=[it,...shuffle(bank.filter(x=>x!==it)).slice(0,1)];
+        opts.forEach(o=>mc.appendChild(opt(o.w,o===it)));
+        speak(it.w);
+        return;
+      }
+      if(mode==='spell'){
+        state.current={mode,ans:it.w};
+        qType.textContent='🔡 拼字';
+        question.innerHTML=`<span class='big-emoji'>${it.emoji||'❔'}</span>`;
+        setupSpell(it.w);
+        speak(it.w);
+      }
     }
 
-    const opt=(t,ok)=>{const e=document.createElement('div');e.className='opt';e.textContent=t;e.onclick=()=>{if(ok){e.classList.add('correct');pop('✅ Good job!');setTimeout(newRound,700);}else{e.classList.add('wrong');pop('❌ Try again');}};return e;};
+    const opt=(t,ok)=>{
+      const e=document.createElement('div');
+      e.className='opt';
+      e.textContent=t;
+      e.onclick=()=>{
+        if(ok){ e.classList.add('correct'); pop('✅ Good job!'); setTimeout(newRound,700); }
+        else  { e.classList.add('wrong');   pop('❌ Try again'); }
+      };
+      return e;
+    };
 
     function setupSpell(a){
-      mc.innerHTML='';spell.classList.remove('hidden');
-      const pool=shuffle(a.split(''));const sl=[];for(let i=0;i<a.length;i++){const s=document.createElement('div');s.className='kbd';s.textContent='_';slots.appendChild(s);sl.push(s);}
-      pool.forEach(c=>{const b=document.createElement('button');b.className='kbd';b.textContent=c;b.onclick=()=>place(b);letters.appendChild(b);});
-      function place(b){const e=sl.find(x=>x.textContent=='_');if(!e)return;e.textContent=b.textContent;b.disabled=true;}
-      btnClear.onclick=()=>{sl.forEach(s=>s.textContent='_');$$('#letters .kbd').forEach(b=>b.disabled=false);};
-      btnSubmit.onclick=()=>{const g=sl.map(s=>s.textContent).join('');if(g===a){pop('✅ Perfect!');setTimeout(newRound,700);}else pop('❌ Oops');};
-      btnHint.onclick=()=>{const i=sl.findIndex(x=>x.textContent=='_');if(i===-1)return;sl[i].textContent=a[i];const b=[...document.querySelectorAll('#letters .kbd')].find(b=>b.textContent===a[i]&&!b.disabled);if(b)b.disabled=true;};
+      mc.innerHTML=''; spell.classList.remove('hidden');
+      const pool=shuffle(a.split(''));
+      const sl=[];
+      for(let i=0;i<a.length;i++){
+        const s=document.createElement('div');
+        s.className='kbd';
+        s.textContent='_';
+        slots.appendChild(s);
+        sl.push(s);
+      }
+      pool.forEach(c=>{
+        const b=document.createElement('button');
+        b.className='kbd';
+        b.textContent=c;
+        b.onclick=()=>place(b);
+        letters.appendChild(b);
+      });
+
+      function place(b){
+        const e=sl.find(x=>x.textContent=='_');
+        if(!e)return;
+        e.textContent=b.textContent;
+        b.disabled=true;
+      }
+      btnClear.onclick=()=>{ sl.forEach(s=>s.textContent='_'); $$('#letters .kbd').forEach(b=>b.disabled=false); };
+      btnSubmit.onclick=()=>{ const g=sl.map(s=>s.textContent).join(''); if(g===a){ pop('✅ Perfect!'); setTimeout(newRound,700); } else pop('❌ Oops'); };
+      btnHint.onclick=()=>{ const i=sl.findIndex(x=>x.textContent=='_'); if(i===-1)return; sl[i].textContent=a[i]; const b=[...document.querySelectorAll('#letters .kbd')].find(b=>b.textContent===a[i]&&!b.disabled); if(b)b.disabled=true; };
     }
 
-    $('#topicSeg').onclick=e=>{const t=e.target.closest('.chip');if(!t)return;state.topic=t.dataset.topic;$$('#topicSeg .chip').forEach(c=>c.classList.toggle('active',c===t));newRound();};
-    $('#modeSeg').onclick=e=>{const t=e.target.closest('.chip');if(!t)return;state.mode=t.dataset.mode;$$('#modeSeg .chip').forEach(c=>c.classList.toggle('active',c===t));newRound();};
+    $('#topicSeg').onclick=e=>{ const t=e.target.closest('.chip'); if(!t)return; state.topic=t.dataset.topic; $$('#topicSeg .chip').forEach(c=>c.classList.toggle('active',c===t)); newRound(); };
+    $('#modeSeg').onclick=e=>{ const t=e.target.closest('.chip'); if(!t)return; state.mode=t.dataset.mode; $$('#modeSeg .chip').forEach(c=>c.classList.toggle('active',c===t)); newRound(); };
     btnNext.onclick=newRound;
-    btnReplay.onclick=()=>{if(!state.current)return;speak(state.current.ans||state.current.s);};
+    btnReplay.onclick=()=>{ if(!state.current)return; speak(state.current.ans||state.current.s); };
 
-    (async()=>{await loadAll();newRound();})();
+    (async()=>{ await loadAll(); newRound(); })();
   </script>
 </body>
 </html>
