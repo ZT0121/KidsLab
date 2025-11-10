@@ -342,12 +342,18 @@
       el.className = 'opt'; el.textContent = text;
       el.addEventListener('click', () => {
         if (el.classList.contains('correct') || el.classList.contains('wrong')) return;
-        if (isCorrect){ el.classList.add('correct'); popToast('Nice!'); reward(true); }
-        else { el.classList.add('wrong'); popToast('Try again'); }
+        if (isCorrect){
+          el.classList.add('correct');
+          popToast('Nice!');
+          reward(true);
+          setTimeout(()=>newRound(), 700);
+        } else {
+          el.classList.add('wrong');
+          popToast('Try again');
+        }
       });
       return el;
     }
-
     function setupSpelling(answer){
       mcArea.innerHTML = '';
       spellArea.classList.remove('hidden');
@@ -372,7 +378,11 @@
         const empty = slotEls.find(x=>x.textContent === '_'); if (!empty) return; empty.textContent = btn.dataset.char; btn.disabled = true;
       }
       btnClear.onclick = () => { slotEls.forEach(s=>s.textContent='_'); $$('#letters .kbd').forEach(b=>b.disabled=false); };
-      btnSubmit.onclick = () => { const guess = slotEls.map(s=>s.textContent).join(''); if (guess === answer){ popToast('Perfect'); reward(true); } else { popToast('Oops'); } };
+      btnSubmit.onclick = () => {
+        const guess = slotEls.map(s=>s.textContent).join('');
+        if (guess === answer){ popToast('Perfect'); reward(true); setTimeout(()=>newRound(), 700); }
+        else { popToast('Oops'); }
+      };
       btnHint.onclick = () => {
         if (state.difficulty === 'hard'){ popToast('挑戰模式無提示'); return; }
         const idx = slotEls.findIndex(x=>x.textContent === '_'); if (idx === -1) return;
