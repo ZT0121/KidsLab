@@ -1,1 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Angus 的累積點數</title>
+
+  <style>
+    @font-face {
+      font-family: 'BpmfIansui';
+      src: url('../BpmfIansui-Regular.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    body{
+      margin:0;
+      font-family:'BpmfIansui',"Noto Sans TC",sans-serif;
+      background:#0b1020 url('../DailyTask/background.png') no-repeat center center fixed;
+      background-size:cover;
+      color:#fff;
+      text-align:center;
+      padding:20px;
+    }
+
+    h1{
+      font-size:1.8rem;
+      text-shadow:2px 2px #000;
+      margin-bottom:4px;
+    }
+
+    .sub{
+      font-size:0.95rem;
+      color:#cbd5f5;
+      margin-bottom:16px;
+    }
+
+    .card{
+      background:rgba(15,23,42,0.9);
+      border:4px solid #000;
+      padding:16px;
+      margin:12px auto;
+      max-width:480px;
+      border-radius:8px;
+      box-shadow:0 0 12px #000;
+    }
+
+    .card-title{
+      font-size:1.2rem;
+      margin-bottom:8px;
+    }
+
+    .xp-container{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .xp-bar{
+      flex:1;
+      max-width:300px;
+      background:#1f2933;
+      border:3px solid #000;
+      height:24px;
+      position:relative;
+      border-radius:6px;
+      overflow:hidden;
+    }
+
+    .xp-fill{
+      background:#22c55e;
+      height:100%;
+      width:0%;
+      transition:width .3s;
+    }
+
+    .xp-text{
+      position:absolute;
+      top:0;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:0.9rem;
+      color:#fff;
+      white-space:nowrap;
+      text-shadow:0 0 4px #000;
+    }
+
+    .total{
+      margin-top:8px;
+      font-size:0.95rem;
+      color:#e5e7eb;
+    }
+
+    .reward-hint{
+      margin-top:6px;
+      font-size:0.9rem;
+      color:#fde68a;
+      min-height:1.2em;
+    }
+
+    button{
+      font-family:'BpmfIansui',"Noto Sans TC",sans-serif;
+      padding:10px 16px;
+      margin:6px;
+      border:3px solid #000;
+      background:#8b5;
+      color:#fff;
+      cursor:pointer;
+      border-radius:6px;
+    }
+
+    button.small{
+      font-size:0.75rem;
+      padding:4px 8px;
+      background:#4b5563;
+      border:2px solid #111827;
+    }
+
+    button.danger{
+      background:#b91c1c;
+      border-color:#7f1d1d;
+    }
+
+    ul{
+      text-align:left;
+      margin:8px auto;
+      max-width:380px;
+      padding-left:18px;
+      font-size:0.9rem;
+    }
+    li{ margin:3px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>Angus 的累積點數</h1>
+  <div class="sub">弟弟的小小獎勵帳本</div>
+
+  <div class="card">
+    <div class="card-title">目前點數</div>
+
+    <div class="xp-container">
+      <div class="xp-bar">
+        <div class="xp-fill" id="xpFill"></div>
+        <div class="xp-text" id="xpText">0 / 5</div>
+      </div>
+    </div>
+
+    <div class="total" id="totalText">累積總點數：0 點</div>
+    <div class="reward-hint" id="rewardHint"></div>
+
+    <button id="parentAddBtn">+1 今日任務（家長操作）</button>
+    <button id="clearPointsBtn" class="small danger">清除所有點數</button>
+  </div>
+
+  <div class="card">
+    <div class="history-title">加點紀錄（最近 10 筆）</div>
+    <ul id="historyList"></ul>
+    <button id="clearHistoryBtn" class="small">清除歷史紀錄</button>
+  </div>
+
+<script>
+  const POINTS_PER_REWARD = 5;
+  const KEY_POINTS = 'angusPoints';
+  const KEY_HISTORY = 'angusPointHistory';
+
+  function loadPoints(){ return parseInt(localStorage.getItem(KEY_POINTS)||'0'); }
+  function savePoints(p){ localStorage.setItem(KEY_POINTS,p); }
+
+  function loadHistory(){
+    try{ return JSON.parse(localStorage.getItem(KEY_HISTORY)||'[]'); }
+    catch{ return []; }
+  }
+  function saveHistory(h){ localStorage.setItem(KEY_HISTORY, JSON.stringify(h)); }
+
+  function formatDate(d){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,'0');
+    const day=String(d.getDate()).padStart(2,'0');
+    const hh=String(d.getHours()).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    return `${y}-${m}-${day} ${hh}:${mm}`;
+  }
+
+  const xpFill=document.getElementById('xpFill');
+  const xpText=document.getElementById('xpText');
+  const totalText=document.getElementById('totalText');
+  const rewardHint=document.getElementById('rewardHint');
+  const historyList=document.getElementById('historyList');
+
+  function render(){
+    const pts=loadPoints();
+    const rewards=Math.floor(pts/POINTS_PER_REWARD);
+    const current=pts%POINTS_PER_REWARD;
+    const percent=(current/POINTS_PER_REWARD)*100;
+
+    xpFill.style.width=percent+'%';
+    xpText.textContent=`${current} / ${POINTS_PER_REWARD}`;
+    totalText.textContent=`累積總點數：${pts} 點`;
+
+    if(rewards>0)
+      rewardHint.textContent=`可以兌換 ${rewards} 次獎勵（內容由爸媽決定）`;
+    else if(pts>0)
+      rewardHint.textContent=`再 ${POINTS_PER_REWARD-current} 點可以兌換獎勵！`;
+    else
+      rewardHint.textContent='';
+
+    const history=loadHistory();
+    historyList.innerHTML = history.slice(-10).reverse().map(h=>
+      `<li>${h.time}：+${h.delta} 點（${h.reason}）</li>`
+    ).join('');
+  }
+
+  function passwordCheck(){
+    return prompt("家長密碼：")==="0329";
+  }
+
+  document.getElementById('parentAddBtn').onclick=()=>{
+    if(!passwordCheck()) return;
+    const pts=loadPoints()+1;
+    savePoints(pts);
+
+    const h=loadHistory();
+    h.push({
+      time:formatDate(new Date()),
+      delta:1,
+      reason:"家長加點"
+    });
+    saveHistory(h);
+
+    render();
+  };
+
+  document.getElementById('clearPointsBtn').onclick=()=>{
+    if(!passwordCheck()) return;
+    if(confirm("確定清除所有點數？")){
+      savePoints(0);
+      render();
+    }
+  };
+
+  document.getElementById('clearHistoryBtn').onclick=()=>{
+    if(!passwordCheck()) return;
+    if(confirm("確定清除紀錄？")){
+      saveHistory([]);
+      render();
+    }
+  };
+
+  render();
+</script>
+
+</body>
+</html>
 
