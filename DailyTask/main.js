@@ -81,6 +81,11 @@ function render() {
   xpFill.style.width = percent + "%";
   xpText.textContent = current + " / 5 (可兌換 " + rewards + " 次週末加時)";
 
+  document.getElementById("rewardAvailable").textContent = "可兌換：" + rewards + " 次";
+  document.getElementById("rewardUsed").textContent = "已兌換：" + used + " 次";
+  rewardMsg.textContent = "";
+
+
   // ⭐ 顯示可兌換 & 已兌換
   if (rewards > 0) {
     rewardMsg.textContent =
