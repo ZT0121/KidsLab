@@ -96,7 +96,7 @@
       margin-top:6px;
       font-size:0.9rem;
       color:#fde68a;
-      min-height:1.2em;
+      min-height:2.2em;
     }
 
     button{
@@ -113,6 +113,7 @@
     button.small{
       font-size:0.75rem;
       padding:4px 8px;
+      margin:4px;
       background:#4b5563;
       border:2px solid #111827;
     }
@@ -135,7 +136,7 @@
 <body>
 
   <h1>Angus 的累積點數</h1>
-  <div class="sub">弟弟的小小獎勵帳本</div>
+  <div class="sub"></div>
 
   <div class="card">
     <div class="card-title">目前點數</div>
@@ -150,7 +151,8 @@
     <div class="total" id="totalText">累積總點數：0 點</div>
     <div class="reward-hint" id="rewardHint"></div>
 
-    <button id="parentAddBtn">+1 今日任務（家長操作）</button>
+    <button id="parentAddBtn">+1 XP（家長操作）</button>
+    <button id="redeemBtn" class="small">🎟️ 兌換 1 次獎勵</button>
     <button id="clearPointsBtn" class="small danger">清除所有點數</button>
   </div>
 
@@ -164,15 +166,32 @@
   const POINTS_PER_REWARD = 5;
   const KEY_POINTS = 'angusPoints';
   const KEY_HISTORY = 'angusPointHistory';
+  const KEY_REWARDS_USED = 'angusRewardsUsed';
 
-  function loadPoints(){ return parseInt(localStorage.getItem(KEY_POINTS)||'0'); }
-  function savePoints(p){ localStorage.setItem(KEY_POINTS,p); }
+  function loadPoints(){
+    return parseInt(localStorage.getItem(KEY_POINTS) || '0', 10);
+  }
+  function savePoints(p){
+    localStorage.setItem(KEY_POINTS, p);
+  }
 
   function loadHistory(){
-    try{ return JSON.parse(localStorage.getItem(KEY_HISTORY)||'[]'); }
-    catch{ return []; }
+    try{
+      return JSON.parse(localStorage.getItem(KEY_HISTORY) || '[]');
+    }catch{
+      return [];
+    }
   }
-  function saveHistory(h){ localStorage.setItem(KEY_HISTORY, JSON.stringify(h)); }
+  function saveHistory(h){
+    localStorage.setItem(KEY_HISTORY, JSON.stringify(h));
+  }
+
+  function loadUsed(){
+    return parseInt(localStorage.getItem(KEY_REWARDS_USED) || '0', 10);
+  }
+  function saveUsed(n){
+    localStorage.setItem(KEY_REWARDS_USED, n);
+  }
 
   function formatDate(d){
     const y=d.getFullYear();
@@ -183,71 +202,97 @@
     return `${y}-${m}-${day} ${hh}:${mm}`;
   }
 
-  const xpFill=document.getElementById('xpFill');
-  const xpText=document.getElementById('xpText');
-  const totalText=document.getElementById('totalText');
-  const rewardHint=document.getElementById('rewardHint');
-  const historyList=document.getElementById('historyList');
+  const xpFill = document.getElementById('xpFill');
+  const xpText = document.getElementById('xpText');
+  const totalText = document.getElementById('totalText');
+  const rewardHint = document.getElementById('rewardHint');
+  const historyList = document.getElementById('historyList');
+  const parentAddBtn = document.getElementById('parentAddBtn');
+  const redeemBtn = document.getElementById('redeemBtn');
+  const clearPointsBtn = document.getElementById('clearPointsBtn');
+  const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
-function render(){
-  const pts = loadPoints();
-  const rewards = Math.floor(pts / POINTS_PER_REWARD);
-  const current = pts % POINTS_PER_REWARD;
-  const percent = (current / POINTS_PER_REWARD) * 100;
+  function render(){
+    const pts = loadPoints();
+    const used = loadUsed();
+    const canRedeem = Math.floor(pts / POINTS_PER_REWARD);
+    const current = pts % POINTS_PER_REWARD;
+    const percent = (current / POINTS_PER_REWARD) * 100;
 
-  xpFill.style.width = percent + '%';
-  xpText.textContent = `${current} / ${POINTS_PER_REWARD}`;
-  totalText.textContent = `累積總點數：${pts} 點`;
+    xpFill.style.width = percent + '%';
+    xpText.textContent = `${current} / ${POINTS_PER_REWARD}`;
+    totalText.textContent = `累積總點數：${pts} 點`;
 
-  if (rewards > 0) {
-    rewardHint.textContent = `目前可以兌換 ${rewards} 次「週末 Minecraft 加時（20 分鐘 × 2）」🎮`;
-  } else if (pts > 0) {
-    rewardHint.textContent = `再 ${POINTS_PER_REWARD - current} 點，就可以兌換 1 次「週末 Minecraft 加時（20 分鐘 × 2）」！`;
-  } else {
-    rewardHint.textContent = '目前還沒有可以兌換的次數，慢慢累積就會有囉～';
+    rewardHint.innerHTML =
+      `已兌換：${used} 次<br>` +
+      `目前可再兌換：${canRedeem} 次「週末 Minecraft 加時（20 分鐘 × 2）」🎮`;
+
+    const history = loadHistory();
+    historyList.innerHTML = history.slice(-10).reverse().map(h =>
+      `<li>${h.time}：${h.delta > 0 ? '+' : ''}${h.delta} 點（${h.reason}）</li>`
+    ).join('');
   }
-
-  const history = loadHistory();
-  historyList.innerHTML = history.slice(-10).reverse().map(h =>
-    `<li>${h.time}：+${h.delta} 點（${h.reason}）</li>`
-  ).join('');
-}
-
 
   function passwordCheck(){
-    return prompt("家長密碼：")==="0329";
+    return prompt("家長密碼：") === "0329";
   }
 
-  document.getElementById('parentAddBtn').onclick=()=>{
+  parentAddBtn.onclick = () => {
     if(!passwordCheck()) return;
-    const pts=loadPoints()+1;
+
+    const pts = loadPoints() + 1;
     savePoints(pts);
 
-    const h=loadHistory();
+    const h = loadHistory();
     h.push({
-      time:formatDate(new Date()),
-      delta:1,
-      reason:"家長加點"
+      time: formatDate(new Date()),
+      delta: 1,
+      reason: "家長加點"
     });
     saveHistory(h);
 
     render();
   };
 
-  document.getElementById('clearPointsBtn').onclick=()=>{
+  redeemBtn.onclick = () => {
     if(!passwordCheck()) return;
-    if(confirm("確定清除所有點數？")){
-      savePoints(0);
-      render();
+
+    let pts = loadPoints();
+    if (pts < POINTS_PER_REWARD) {
+      alert("點數不足 5 點，還不能兌換喔！");
+      return;
     }
+
+    pts -= POINTS_PER_REWARD;
+    savePoints(pts);
+
+    let used = loadUsed() + 1;
+    saveUsed(used);
+
+    const h = loadHistory();
+    h.push({
+      time: formatDate(new Date()),
+      delta: -POINTS_PER_REWARD,
+      reason: "兌換獎勵（週末 Minecraft 加時 20 分鐘 × 2）🎮"
+    });
+    saveHistory(h);
+
+    alert("已兌換 1 次：週末 Minecraft 加時（20 分鐘 × 2）！🎮");
+    render();
   };
 
-  document.getElementById('clearHistoryBtn').onclick=()=>{
+  clearPointsBtn.onclick = () => {
     if(!passwordCheck()) return;
-    if(confirm("確定清除紀錄？")){
-      saveHistory([]);
-      render();
-    }
+    if(!confirm("確定清除所有點數？")) return;
+    savePoints(0);
+    render();
+  };
+
+  clearHistoryBtn.onclick = () => {
+    if(!passwordCheck()) return;
+    if(!confirm("確定清除所有紀錄？")) return;
+    saveHistory([]);
+    render();
   };
 
   render();
@@ -255,4 +300,3 @@ function render(){
 
 </body>
 </html>
-
