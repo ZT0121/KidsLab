@@ -1,6 +1,6 @@
 const KEY_TASKS = 'hunterAssignments';
 const KEY_POINTS = 'hunterPoints';
-const KEY_REWARDS_USED = 'hunterRewardsUsed'; // ⭐ 新增：紀錄已兌換次數
+const KEY_REWARDS_USED = 'hunterRewardsUsed'; // ⭐ 新增：紀錄已兌換幾次
 
 // === 日期工具 ===
 function getDateKey(d = new Date()) {
@@ -28,7 +28,7 @@ function savePoints(p) {
   localStorage.setItem(KEY_POINTS, p);
 }
 
-// ⭐ 新增：已兌換次數的存取
+// ⭐ 已兌換次數
 function loadUsedRewards() {
   return parseInt(localStorage.getItem(KEY_REWARDS_USED) || '0');
 }
@@ -50,6 +50,7 @@ const historyListEl = document.getElementById('historyList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 const clearPointsBtn = document.getElementById('clearPointsBtn');
 const doneMark = document.getElementById('doneMark');
+const usedTimesEl = document.getElementById('usedTimes');
 
 function formatDateStr(dateStr) {
   const d = new Date(dateStr);
@@ -76,25 +77,17 @@ function render() {
   const rewards = Math.floor(pts / 5);   // 每 5 點 = 1 次獎勵
   const current = pts % 5;               // 目前這一輪的進度
   const percent = (current / 5) * 100;
-  const used = loadUsedRewards();        // ⭐ 已兌換總次數
+  const used = loadUsedRewards();        // 已兌換總次數
 
   xpFill.style.width = percent + "%";
-  xpText.textContent = current + " / 5 (可兌換 " + rewards + " 次週末加時)";
+  xpText.textContent = current + " / 5";
 
-  document.getElementById("rewardAvailable").textContent = "可兌換：" + rewards + " 次";
-  document.getElementById("rewardUsed").textContent = "已兌換：" + used + " 次";
-  rewardMsg.textContent = "";
-
-
-  // ⭐ 顯示可兌換 & 已兌換
-  if (rewards > 0) {
-    rewardMsg.textContent =
-      "恭喜！你可以換 " + rewards + " 次 Minecraft 週末加時（20 分鐘 × 2）🎮，" +
-      "目前已兌換 " + used + " 次。";
-    redeemBtn.style.display = 'inline-block';
-  } else {
-    rewardMsg.textContent = "目前沒有可兌換的獎勵，已兌換 " + used + " 次。";
-    redeemBtn.style.display = 'none';
+  // ⭐ 這裡改成你要的呈現方式
+  if (rewardMsg) {
+    rewardMsg.textContent = "可兌換：" + rewards + " 次";
+  }
+  if (usedTimesEl) {
+    usedTimesEl.textContent = "已兌換：" + used + " 次";
   }
 
   // 任務歷史紀錄（最近 10 筆）
@@ -162,6 +155,7 @@ document.getElementById('completeBtn').onclick = () => {
   render();
 };
 
+// 兌換：扣 5 點 + 已兌換次數 +1
 redeemBtn.onclick = () => {
   let pts = loadPoints();
   const rewards = Math.floor(pts / 5);
@@ -169,16 +163,14 @@ redeemBtn.onclick = () => {
     alert("目前沒有可兌換的獎勵喔！");
     return;
   }
-  // 扣 5 點
   pts -= 5;
   savePoints(pts);
 
-  // ⭐ 已兌換次數 +1
   let used = loadUsedRewards();
   used++;
   saveUsedRewards(used);
 
-  alert("已兌換 Minecraft 週末加時（20 分鐘 × 2），積分扣除 5 點！");
+  alert("已兌換 1 次：週六、週日各 +20 分鐘 Minecraft！");
   render();
 };
 
