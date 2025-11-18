@@ -64,15 +64,15 @@ function render() {
   }
 
   const pts = loadPoints();
-  const rewards = Math.floor(pts / 5);
-  const current = pts % 5;
+  const rewards = Math.floor(pts / 5);   // 每 5 點 = 1 次獎勵
+  const current = pts % 5;               // 目前這一輪的進度
   const percent = (current / 5) * 100;
 
   xpFill.style.width = percent + "%";
-  xpText.textContent = current + " / 5 (可兌換 " + rewards + " 次)";
+  xpText.textContent = current + " / 5 (可兌換 " + rewards + " 次週末加時)";
 
   if (rewards > 0) {
-    rewardMsg.textContent = "恭喜！你可以換 " + rewards + " 次 30 分鐘 Minecraft 🎮";
+    rewardMsg.textContent = "恭喜！你可以換 " + rewards + " 次 Minecraft 週末加時（20 分鐘 × 2）🎮";
     redeemBtn.style.display = 'inline-block';
   } else {
     rewardMsg.textContent = "";
@@ -146,12 +146,15 @@ document.getElementById('completeBtn').onclick = () => {
 
 redeemBtn.onclick = () => {
   let pts = loadPoints();
-  if (pts >= 5) {
-    pts -= 5;
-    savePoints(pts);
-    alert("已兌換 30 分鐘 Minecraft，積分扣除 5 點！");
-    render();
+  const rewards = Math.floor(pts / 5);
+  if (rewards <= 0) {
+    alert("目前沒有可兌換的獎勵喔！");
+    return;
   }
+  pts -= 5;
+  savePoints(pts);
+  alert("已兌換 Minecraft 週末加時（20 分鐘 × 2），積分扣除 5 點！");
+  render();
 };
 
 clearPointsBtn.onclick = () => {
