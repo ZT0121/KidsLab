@@ -1,6 +1,6 @@
 const KEY_TASKS = 'hunterAssignments';
 const KEY_POINTS = 'hunterPoints';
-const KEY_REWARDS_USED = 'hunterRewardsUsed'; // ⭐ 新增：紀錄已兌換幾次
+const KEY_REWARDS_USED = 'hunterRewardsUsed'; // ⭐ 新增：已兌換幾次
 
 // === 日期工具 ===
 function getDateKey(d = new Date()) {
@@ -45,12 +45,12 @@ const todayTaskEl = document.getElementById('todayTask');
 const xpFill = document.getElementById('xpFill');
 const xpText = document.getElementById('xpText');
 const rewardMsg = document.getElementById('rewardMsg');
+const usedTimesEl = document.getElementById('usedTimes');
 const redeemBtn = document.getElementById('redeemBtn');
 const historyListEl = document.getElementById('historyList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 const clearPointsBtn = document.getElementById('clearPointsBtn');
 const doneMark = document.getElementById('doneMark');
-const usedTimesEl = document.getElementById('usedTimes');
 
 function formatDateStr(dateStr) {
   const d = new Date(dateStr);
@@ -82,12 +82,19 @@ function render() {
   xpFill.style.width = percent + "%";
   xpText.textContent = current + " / 5";
 
-  // ⭐ 這裡改成你要的呈現方式
+  // ⭐ 這裡改成你要的三行呈現
   if (rewardMsg) {
     rewardMsg.textContent = "可兌換：" + rewards + " 次";
   }
   if (usedTimesEl) {
     usedTimesEl.textContent = "已兌換：" + used + " 次";
+  }
+
+  // 按鈕是否顯示
+  if (rewards > 0) {
+    redeemBtn.style.display = 'inline-block';
+  } else {
+    redeemBtn.style.display = 'none';
   }
 
   // 任務歷史紀錄（最近 10 筆）
@@ -163,6 +170,7 @@ redeemBtn.onclick = () => {
     alert("目前沒有可兌換的獎勵喔！");
     return;
   }
+
   pts -= 5;
   savePoints(pts);
 
