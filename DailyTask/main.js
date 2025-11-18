@@ -1,5 +1,6 @@
 const KEY_TASKS = 'hunterAssignments';
 const KEY_POINTS = 'hunterPoints';
+const KEY_REWARDS_USED = 'hunterRewardsUsed'; // ⭐ 新增：紀錄已兌換次數
 
 // === 日期工具 ===
 function getDateKey(d = new Date()) {
@@ -25,6 +26,14 @@ function loadPoints() {
 }
 function savePoints(p) {
   localStorage.setItem(KEY_POINTS, p);
+}
+
+// ⭐ 新增：已兌換次數的存取
+function loadUsedRewards() {
+  return parseInt(localStorage.getItem(KEY_REWARDS_USED) || '0');
+}
+function saveUsedRewards(n) {
+  localStorage.setItem(KEY_REWARDS_USED, n);
 }
 
 // === 功能 ===
@@ -67,15 +76,19 @@ function render() {
   const rewards = Math.floor(pts / 5);   // 每 5 點 = 1 次獎勵
   const current = pts % 5;               // 目前這一輪的進度
   const percent = (current / 5) * 100;
+  const used = loadUsedRewards();        // ⭐ 已兌換總次數
 
   xpFill.style.width = percent + "%";
   xpText.textContent = current + " / 5 (可兌換 " + rewards + " 次週末加時)";
 
+  // ⭐ 顯示可兌換 & 已兌換
   if (rewards > 0) {
-    rewardMsg.textContent = "恭喜！你可以換 " + rewards + " 次 Minecraft 週末加時（20 分鐘 × 2）🎮";
+    rewardMsg.textContent =
+      "恭喜！你可以換 " + rewards + " 次 Minecraft 週末加時（20 分鐘 × 2）🎮，" +
+      "目前已兌換 " + used + " 次。";
     redeemBtn.style.display = 'inline-block';
   } else {
-    rewardMsg.textContent = "";
+    rewardMsg.textContent = "目前沒有可兌換的獎勵，已兌換 " + used + " 次。";
     redeemBtn.style.display = 'none';
   }
 
@@ -151,8 +164,15 @@ redeemBtn.onclick = () => {
     alert("目前沒有可兌換的獎勵喔！");
     return;
   }
+  // 扣 5 點
   pts -= 5;
   savePoints(pts);
+
+  // ⭐ 已兌換次數 +1
+  let used = loadUsedRewards();
+  used++;
+  saveUsedRewards(used);
+
   alert("已兌換 Minecraft 週末加時（20 分鐘 × 2），積分扣除 5 點！");
   render();
 };
