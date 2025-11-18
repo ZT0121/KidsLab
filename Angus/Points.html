@@ -93,35 +93,37 @@
     }
 
     .reward-hint{
-      margin-top:6px;
-      font-size:0.9rem;
+      margin-top:10px;
+      font-size:1rem;
       color:#fde68a;
-      min-height:2.2em;
+      min-height:1.2em;
     }
 
-    button{
-      font-family:'BpmfIansui',"Noto Sans TC",sans-serif;
-      padding:10px 16px;
-      margin:6px;
-      border:3px solid #000;
-      background:#8b5;
-      color:#fff;
-      cursor:pointer;
-      border-radius:6px;
+    /* ⭐⭐⭐ 三顆按鈕排成一行 */
+    .action-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
     }
 
-    button.small{
-      font-size:0.75rem;
-      padding:4px 8px;
-      margin:4px;
-      background:#4b5563;
-      border:2px solid #111827;
+    .action-row button {
+      flex: 1 1 30%;
+      font-size: 1rem;
+      padding: 10px 0;
+      height: 48px;
+      line-height: 24px;
+      border-width: 3px;
+      box-sizing: border-box;
+      min-width: 90px;
+      border-radius: 6px;
+      color: #fff;
     }
 
-    button.danger{
-      background:#b91c1c;
-      border-color:#7f1d1d;
-    }
+    #parentAddBtn { background:#8b5; }
+    #redeemBtn { background:#5465d8; }
+    #clearPointsBtn { background:#b91c1c; border-color:#7f1d1d; }
 
     ul{
       text-align:left;
@@ -136,7 +138,7 @@
 <body>
 
   <h1>Angus 的累積點數</h1>
-  <div class="sub"></div>
+  <div class="sub">弟弟的小小獎勵帳本</div>
 
   <div class="card">
     <div class="card-title">目前點數</div>
@@ -149,11 +151,18 @@
     </div>
 
     <div class="total" id="totalText">累積總點數：0 點</div>
-    <div class="reward-hint" id="rewardHint"></div>
 
-    <button id="parentAddBtn">+1 XP（家長操作）</button>
-    <button id="redeemBtn" class="small">🎟️ 兌換 1 次獎勵</button>
-    <button id="clearPointsBtn" class="small danger">清除所有點數</button>
+    <div class="reward-hint">
+      已兌換次數：<span id="usedTimes">0</span> 次
+    </div>
+
+    <!-- ⭐⭐⭐ 三顆按鈕這裡 -->
+    <div class="action-row">
+      <button id="parentAddBtn">+1 XP</button>
+      <button id="redeemBtn">兌換</button>
+      <button id="clearPointsBtn">清除</button>
+    </div>
+
   </div>
 
   <div class="card">
@@ -168,30 +177,17 @@
   const KEY_HISTORY = 'angusPointHistory';
   const KEY_REWARDS_USED = 'angusRewardsUsed';
 
-  function loadPoints(){
-    return parseInt(localStorage.getItem(KEY_POINTS) || '0', 10);
-  }
-  function savePoints(p){
-    localStorage.setItem(KEY_POINTS, p);
-  }
+  function loadPoints(){ return parseInt(localStorage.getItem(KEY_POINTS)||'0'); }
+  function savePoints(p){ localStorage.setItem(KEY_POINTS,p); }
 
   function loadHistory(){
-    try{
-      return JSON.parse(localStorage.getItem(KEY_HISTORY) || '[]');
-    }catch{
-      return [];
-    }
+    try{ return JSON.parse(localStorage.getItem(KEY_HISTORY)||'[]'); }
+    catch{ return []; }
   }
-  function saveHistory(h){
-    localStorage.setItem(KEY_HISTORY, JSON.stringify(h));
-  }
+  function saveHistory(h){ localStorage.setItem(KEY_HISTORY, JSON.stringify(h)); }
 
-  function loadUsed(){
-    return parseInt(localStorage.getItem(KEY_REWARDS_USED) || '0', 10);
-  }
-  function saveUsed(n){
-    localStorage.setItem(KEY_REWARDS_USED, n);
-  }
+  function loadUsed(){ return parseInt(localStorage.getItem(KEY_REWARDS_USED)||'0'); }
+  function saveUsed(n){ localStorage.setItem(KEY_REWARDS_USED, n); }
 
   function formatDate(d){
     const y=d.getFullYear();
@@ -202,97 +198,75 @@
     return `${y}-${m}-${day} ${hh}:${mm}`;
   }
 
-  const xpFill = document.getElementById('xpFill');
-  const xpText = document.getElementById('xpText');
-  const totalText = document.getElementById('totalText');
-  const rewardHint = document.getElementById('rewardHint');
-  const historyList = document.getElementById('historyList');
-  const parentAddBtn = document.getElementById('parentAddBtn');
-  const redeemBtn = document.getElementById('redeemBtn');
-  const clearPointsBtn = document.getElementById('clearPointsBtn');
-  const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+  const xpFill=document.getElementById('xpFill');
+  const xpText=document.getElementById('xpText');
+  const totalText=document.getElementById('totalText');
+  const usedTimes=document.getElementById('usedTimes');
+  const historyList=document.getElementById('historyList');
 
   function render(){
     const pts = loadPoints();
     const used = loadUsed();
-    const canRedeem = Math.floor(pts / POINTS_PER_REWARD);
+
     const current = pts % POINTS_PER_REWARD;
     const percent = (current / POINTS_PER_REWARD) * 100;
 
-    xpFill.style.width = percent + '%';
+    xpFill.style.width = percent + "%";
     xpText.textContent = `${current} / ${POINTS_PER_REWARD}`;
     totalText.textContent = `累積總點數：${pts} 點`;
 
-    rewardHint.innerHTML =
-      `已兌換：${used} 次<br>` +
-      `目前可再兌換：${canRedeem} 次「週末 Minecraft 加時（20 分鐘 × 2）」🎮`;
+    usedTimes.textContent = used;
 
     const history = loadHistory();
     historyList.innerHTML = history.slice(-10).reverse().map(h =>
-      `<li>${h.time}：${h.delta > 0 ? '+' : ''}${h.delta} 點（${h.reason}）</li>`
+      `<li>${h.time}：+${h.delta} 點（${h.reason}）</li>`
     ).join('');
   }
 
   function passwordCheck(){
-    return prompt("家長密碼：") === "0329";
+    return prompt("家長密碼：")==="0329";
   }
 
-  parentAddBtn.onclick = () => {
+  document.getElementById('parentAddBtn').onclick=()=>{
     if(!passwordCheck()) return;
-
-    const pts = loadPoints() + 1;
+    const pts=loadPoints()+1;
     savePoints(pts);
 
-    const h = loadHistory();
+    const h=loadHistory();
     h.push({
-      time: formatDate(new Date()),
-      delta: 1,
-      reason: "家長加點"
+      time:formatDate(new Date()),
+      delta:1,
+      reason:"家長加點"
     });
     saveHistory(h);
 
     render();
   };
 
-  redeemBtn.onclick = () => {
+  document.getElementById('redeemBtn').onclick=()=>{
     if(!passwordCheck()) return;
 
-    let pts = loadPoints();
-    if (pts < POINTS_PER_REWARD) {
-      alert("點數不足 5 點，還不能兌換喔！");
-      return;
-    }
-
-    pts -= POINTS_PER_REWARD;
-    savePoints(pts);
-
-    let used = loadUsed() + 1;
+    let used = loadUsed()+1;
     saveUsed(used);
 
-    const h = loadHistory();
-    h.push({
-      time: formatDate(new Date()),
-      delta: -POINTS_PER_REWARD,
-      reason: "兌換獎勵（週末 Minecraft 加時 20 分鐘 × 2）🎮"
-    });
-    saveHistory(h);
-
-    alert("已兌換 1 次：週末 Minecraft 加時（20 分鐘 × 2）！🎮");
+    alert("已兌換 1 次！");
     render();
   };
 
-  clearPointsBtn.onclick = () => {
+  document.getElementById('clearPointsBtn').onclick=()=>{
     if(!passwordCheck()) return;
-    if(!confirm("確定清除所有點數？")) return;
-    savePoints(0);
-    render();
+    if(confirm("確定要清除所有點數嗎？")){
+      savePoints(0);
+      render();
+    }
   };
 
-  clearHistoryBtn.onclick = () => {
+  document.getElementById('clearHistoryBtn').onclick=()=>{
     if(!passwordCheck()) return;
-    if(!confirm("確定清除所有紀錄？")) return;
-    saveHistory([]);
-    render();
+    if(confirm("確定要清除歷史紀錄嗎？")){
+      saveHistory([]);
+      render();
+    }
   };
 
   render();
